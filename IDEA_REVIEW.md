@@ -2,31 +2,29 @@
 
 ## Điểm tiếp tục
 
-- Chế độ `INTERACTIVE`
-- Ngôn ngữ tiếng Việt
-- Trạng thái `clarifying`
+- Chế độ `INTERACTIVE`, tiếng Việt.
+- Trạng thái `awaiting-approval`.
 - Đầu vào `RAW_IDEA.md`, blob Git `313480ea9edcfa518bd8bdf37e69b1f2f8137fdf`.
-- SHA-256 của dự thảo `IDEA.md` đang chờ.
-- Đã đọc ý tưởng gốc, hướng dẫn dự án, kỹ năng và mẫu đặc tả.
-- Tiếp theo, nhận lựa chọn kênh đầu tiên, kiểm tra điều kiện đăng qua API chính thức và soạn `IDEA.md` để duyệt.
+- SHA-256 chính xác của [IDEA.md](IDEA.md) là `456a41fa97885e69646b1b2231a7836406aeb23dfdfb449091a1e1d7a31bf9e2`.
+- Đã xác minh nội dung `IDEA.md` trên nhánh `review/affiliate-video-idea`.
+- Tiếp theo, chờ phê duyệt rõ ràng cho bản này rồi đối chiếu SHA-256 trước khi lập kế hoạch.
 
 ## Làm rõ và giả định
 
-- Câu hỏi vòng 1 đang chờ. Bạn muốn thử đăng tự động trên kênh nào trước (TikTok, YouTube Shorts, Facebook Reels), hay bản đầu chỉ cần xuất MP4 để bạn đăng tay?
-- Yêu cầu đã rõ gồm đọc từng dòng Google Sheets và ảnh tương ứng trong Drive, tạo kịch bản vui và sáng tạo có ích, dựng clip 15–20 giây với hình ảnh thật hoặc góc quay giấu mặt, dùng GitHub Actions cho luồng đăng khi khả thi.
-- Mặc định đề xuất dùng ảnh hoặc clip thật có quyền sử dụng, Remotion và FFmpeg, xem trước rồi mới đăng. Mức chi được phép trong giai đoạn khám phá là 0 ₫.
+- Vòng 1 hỏi kênh ưu tiên và cách duyệt. Người dùng trả lời “Tự động lên fb, tiktok và short đăng draft, tự approve sau”.
+- Chốt ba kênh, tải chưa công khai và người dùng tự duyệt trong ứng dụng. Giả định video tiếng Việt, và Facebook là Page.
 
 ## Nghiên cứu và quyết định
 
-- Đối chiếu khả năng đăng, quyền tài khoản và cách hiển thị liên kết theo kênh được chọn. Kiểm tra khả năng dùng gói AI qua API trước khi chốt nhà cung cấp.
+Ngày 25/11/2026, đối chiếu nguồn chính thức được dẫn trong IDEA.md. Facebook có trạng thái DRAFT cho Page Reels. YouTube dùng private và link mô tả Shorts không bấm được. TikTok dùng quyền video.upload để chuyển vào hộp thư, phụ thuộc quyền ứng dụng và tài khoản. Có gói tải tay khi quyền bị chặn. Sheets và Drive cấp đầu vào, Remotion và FFmpeg dựng clip. Nhà cung cấp AI và quyền thật cần xác nhận riêng. Lượt thử giả lập dự kiến 0 ₫ trong hạn mức có sẵn, trần chi hiện tại 0 ₫.
 
 ## Tóm tắt để duyệt
 
-Đang chờ dự thảo.
+Tạo clip dọc 15–20 giây từ dữ liệu và tư liệu thật, tải để duyệt trên ba kênh được cấp quyền, người dùng tự công khai. Bạn duyệt IDEA.md bản này hay muốn chỉnh thêm?
 
 ## Hồ sơ phê duyệt
 
-- Quyết định, người duyệt, bằng chứng, thời điểm và SHA-256 đều đang chờ.
+- Quyết định, người duyệt, bằng chứng, thời điểm và SHA-256 được duyệt đều đang chờ.
 
 ## Bàn giao
 
