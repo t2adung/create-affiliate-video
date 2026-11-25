@@ -2,8 +2,17 @@
 
 ## Your idea / Ý tưởng của bạn
 
-<!-- Describe what you want, who needs it, and what they should get in a few sentences.
-Viết vài câu về việc bạn muốn làm, ai cần công cụ này và kết quả bạn mong muốn. -->
+Từ 1 danh sách google sheet gồm các cột
++ tên product
++ giới thiệu nội dung sản phầm
++ link sản phẩm affiliate
++ tên thư mục chứa hình product google drive
+Dùng AI subcription để tạo ra ý tưởng video short 15-20s bằng cách đọc từng line trong danh sách google sheets rồi:
++ nghĩ ra kịch bản thu hút, nội dung bắt mắt được sáng tạo từ hình ảnh và nội dung. BẮT BUỘC PHẢI SÁNG TẠO, VUI VẺ, Ý NGHĨA
++ hình ảnh là người thật hoặc giấu mặt
++ dùng remotion + ffm. hoặc tool AI để generate ra video
++ đảm bao ko giống giả trân như AI.
+có video thì dùng git action đăng lên các nền tẳng xã hội
 
 ## Discovery mode / Chế độ khám phá
 
