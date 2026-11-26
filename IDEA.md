@@ -72,13 +72,12 @@ Với mỗi sản phẩm, AI phân tích bộ ảnh và đề xuất ba kịch b
 
 Ưu tiên thử A và C vì ảnh đã có đủ cảnh để kể trọn ý. B có thêm giá trị hướng dẫn, bản dùng ảnh cần ghi rõ nét vẽ là minh họa. Tránh dùng ảnh gia đình trong mẫu xem thử vì ba hướng đều đủ tư liệu khác. Không đọc lại kích thước hoặc trọng lượng từ ảnh bán hàng khi chưa xác nhận thông tin biến thể với người bán.
 
-### Nhân vật xuyên suốt
+### Nhân vật decor dùng quanh năm
 
-- **Nơ**, linh vật hình nơ màu kem, phụ trách câu hỏi hoặc một phản ứng ngắn. Dùng một bộ tư thế và biểu cảm cố định. Cho xuất hiện khoảng 1–2 giây tại rìa vùng an toàn, tránh che sản phẩm.
-- **Tay Decor**, đôi tay quay giấu mặt với tay áo xanh rêu và góc máy cố định, đảm nhận các động tác thật khi có footage.
-- **Sao**, linh vật ngôi sao nhỏ cho mùa lễ, xuất hiện khi cần một câu đùa hoặc chấm điểm phối màu. Chuẩn bị sau khi đã chọn phong cách của Nơ.
+- **Cọ** là linh vật chính, lấy hình dáng cọ trang trí với cán xanh rêu và đầu cọ màu kem. Cọ gợi ý phối màu, chỉ vào chi tiết đáng chú ý hoặc đặt một câu hỏi ngắn. Ví dụ với ruy băng lưới, Cọ chỉ vào hai mẫu và hỏi “Vàng ấm hay bạc lạnh?”. Vai này dùng được cho các clip về đèn, bình hoa, khung tranh, gói quà và đồ trang trí bàn.
+- **Tay Decor** là nhân vật phụ quay giấu mặt, nhận diện qua tay áo xanh rêu và góc máy cố định. Xuất hiện khi có footage thật để minh họa cách buộc nơ, cắm hoa hoặc sắp xếp đồ.
 
-Mặc định thử Nơ trước, làm bộ hình một lần và tái sử dụng. Có thể dùng AI phác thảo rồi chốt màu, nét, tỷ lệ và biểu cảm vào bộ tài sản dùng chung. Cảnh cận sản phẩm giữ ảnh gốc, chỉ crop và điều chỉnh bố cục. Nếu thử cảnh AI tạo chuyển động, chỉ dùng cho cảnh phụ như ánh đèn nền và ghi rõ nếu nó có thể bị hiểu là hình ảnh sản phẩm thật.
+Thử Cọ trước với một bộ hình cố định gồm các biểu cảm và tư thế chỉ, hỏi, gật đầu. Mỗi lần xuất hiện khoảng 1–2 giây ở mép khung, tránh che sản phẩm. Giữ bảng màu, tỷ lệ và nét vẽ nhất quán khi đổi chủ đề decor. Cảnh cận giữ ảnh sản phẩm gốc. Nếu dùng AI tạo chuyển động cho cảnh phụ có thể bị hiểu là hình ảnh sản phẩm thật, ghi rõ đó là minh họa.
 
 ### Mức giá mục tiêu
 
