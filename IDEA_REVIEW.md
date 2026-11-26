@@ -7,8 +7,8 @@
 - State: clarifying
 - Raw input reference and revision: RAW_IDEA.md at commit 7e559a1, SHA-256 fc75d1c34716b9f9695c5aeb9498cc99dadf8f70a4cda489dbaf0468f8ce76cd
 - Draft IDEA.md SHA-256: pending (root IDEA.md is still the template description)
-- Last completed action: rendered three free local demo videos (A skit, B problem→solution, C price quiz) from the user's sample product images and sent them for feedback
-- Next action: collect demo feedback, the product's real price, and remaining round-1 answers (or defaults), then draft IDEA.md
+- Last completed action: user rejected mascots and slideshow style; researched AI story-video options and sent round-4 options (API automation vs. subscription semi-manual vs. self-filmed)
+- Next action: get the user's choice of video-generation route, budget, affiliate network and approval for a paid AI demo (with spend cap and API key via secure form), then draft IDEA.md
 
 ## Clarifications and assumptions
 
@@ -46,6 +46,10 @@ Feasibility demo (local, zero spend): Remotion 4.0.547 + React 19 in the session
 
 Data-quality findings from the sample description: it claims "lụa cao cấp" while the image says PP mesh fibre; dimensions mix "9M long, 26cm wide" with roll photos labelled 26cm/15cm. The pipeline needs a fact list per product so scripts only use verifiable claims.
 
+Round 4 (2026-11-26). User feedback: no mascots; wants faceless people and a real story, not a photo slideshow. Willing to spend more tokens, or use ChatGPT Pro / Gemini Pro, or any tool that generates story-like video. Asks what is needed to render such videos.
+
+Proposed in round 4: hybrid story pipeline — LLM writes a 3–4 shot faceless story (hands, back view, silhouettes, POV) + AI text-to-video/image-to-video shots with product reference images + real product-photo inserts for accuracy + Vietnamese TTS narration + subtitles/music assembled in Remotion/FFmpeg. Routes: (1) Gemini API pay-as-you-go, fully automated, about 30–45k VND/video incl. retries; (2) Google AI Pro subscription + Flow, semi-manual (no API; user pastes prompts and drops clips into Drive); (3) user films hands-only clips, AI writes script/voice/edit. Sora excluded (reported discontinued). Platform AI labels are mandatory for realistic AI video; Shopee may affect commissions for AI-labelled videos (unverified).
+
 ## Research and decisions
 
 Sources checked 2026-11-26 (web search summaries; verify against live docs during the Research stage):
@@ -57,6 +61,12 @@ Sources checked 2026-11-26 (web search summaries; verify against live docs durin
 - Exchange rate Nov 2026: SBV central rate ~25,640 VND/USD; commercial bank selling ~25,900. Planning rate: 26,000 VND/USD, so 5,000 VND ≈ 0.19 USD per clip. https://thoibaotaichinhvietnam.vn/sang-2611-ty-gia-trung-tam-giam-1-dong-gia-usd-on-dinh-26756.html
 - Consequence: Veo 3.1 Lite 720p at ~0.05 USD/s means even a 4 s AI clip (~5,200 VND) exceeds the per-clip cap, so AI video is an opt-in premium tier only.
 - Local tooling check: examples/video already pins Remotion 4.0.547 with React 19; node 22 and ffmpeg are available, so free local demo renders are feasible.
+- Veo 3.1 preview models in the Gemini API reportedly shut down 2026-10-22; successor Gemini Omni Flash. Omni 1.2 Flash GA 2026-11-05 at about 0.07 USD/s for 720p, clips up to 15 s, no free tier (secondary sources). https://ai.google.dev/gemini-api/docs/veo , https://fourweekmba.com/ai-google-cuts-gemini-omni-video-price-30-to-0-07-a-second/ , https://xenospectrum.com/en/gemini-omni-flash-video-pricing/
+- Veo 3.1 "ingredients to video": up to 3 reference images for object/character consistency; first/last-frame control. https://developers.googleblog.com/en/introducing-veo-3-1-and-new-creative-capabilities-in-the-gemini-api/
+- Google Flow credits (third-party summaries): AI Pro 19.99 USD/month adds 1,000 credits; Veo 3.1 Lite about 10 credits/clip, Fast 20, Quality 100; Flow has no public API. https://inferencehub.org/blog/google-flow-pricing-2026 , https://toyboxai.io/blog/veo-3-pricing/
+- Sora: consumer app reportedly discontinued 2026-04-26 and Videos API 2026-09-24 (third-party). https://costgoat.com/pricing/sora , https://framesurfer.com/blogs/sora-2-pricing
+- Other APIs: Kling 3.0 about 0.084 USD/s at 720p (prepaid packages); Hailuo about 0.025–0.08 USD/s; Seedance varies widely by reseller. https://apiframe.ai/blog/ai-video-api-pricing-2026 , https://promptsrush.com/blog/kling-ai-pricing
+- AI disclosure: TikTok and YouTube require labels for realistic AI content; Shopee Video AI-content guidelines effective 2026-08-01 with penalties for non-disclosure; commission impact of AI labels unconfirmed. https://help.shopee.sg/portal/10/article/201777 , https://billo.app/blog/ai-labeling/ , https://www.bigseller.pro/blog/articleDetails/4649/shopee-video-AI-2026.htm
 - Consumer AI subscriptions (ChatGPT Plus, Claude Pro, Gemini Advanced) are chat products; unattended GitHub Actions automation needs an API key billed per use (to confirm with the user's chosen provider).
 
 ## Vietnamese approval summary
