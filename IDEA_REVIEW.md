@@ -5,7 +5,7 @@
 - Chế độ `INTERACTIVE`, tiếng Việt.
 - Trạng thái `awaiting-approval`.
 - Đầu vào `RAW_IDEA.md`, blob Git `313480ea9edcfa518bd8bdf37e69b1f2f8137fdf`.
-- SHA-256 chính xác của [IDEA.md](IDEA.md) là `9b8cd84248a6e79ca21932e4509cde49b1012dee76752b5cb364320826dc6b7c`.
+- SHA-256 chính xác của [IDEA.md](IDEA.md) là `d2e629467aa2b5133475a3a5e093761324a76c942b7ab7c4d5382d97a023c4f1`.
 - Đã xác minh nội dung `IDEA.md` trên nhánh `review/affiliate-video-idea`.
 - Tiếp theo, chờ phê duyệt rõ ràng cho bản này rồi đối chiếu SHA-256 trước khi lập kế hoạch.
 
@@ -20,9 +20,11 @@ Ngày 25/11/2026, đối chiếu nguồn chính thức được dẫn trong IDEA
 
 Ngày 26/11/2026, bổ sung ba storyboard cho bộ ảnh ruy băng, chọn một linh vật cố định để thử trước và lấy 5.000 ₫ mỗi clip hoàn chỉnh làm mức dự toán. Chưa duyệt chi phí trả phí. Ảnh hiển thị trong hội thoại, chưa có tệp nguồn trong workspace để render MP4. Bản rà soát hiện gồm các phương án dựng.
 
+Người dùng chọn nhân vật gắn với decor và dùng quanh năm. Cọ là linh vật chính; Tay Decor hỗ trợ khi có footage thao tác thật.
+
 ## Tóm tắt để duyệt
 
-Tạo clip dọc 15–20 giây từ dữ liệu và tư liệu thật, tải để duyệt trên ba kênh được cấp quyền, người dùng tự công khai. Với mỗi sản phẩm, duyệt một trong ba kịch bản và thử nhân vật Nơ. Bạn duyệt IDEA.md bản này hay muốn chỉnh thêm?
+Tạo clip dọc 15–20 giây từ dữ liệu và tư liệu thật, tải để duyệt trên ba kênh được cấp quyền, người dùng tự công khai. Với mỗi sản phẩm, duyệt một trong ba kịch bản và thử linh vật Cọ. Bạn duyệt IDEA.md bản này hay muốn chỉnh thêm?
 
 ## Hồ sơ phê duyệt
 
