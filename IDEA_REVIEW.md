@@ -4,11 +4,11 @@
 
 - Mode: INTERACTIVE
 - User language: Vietnamese
-- State: awaiting-approval
+- State: handed-off
 - Raw input reference and revision: RAW_IDEA.md revision 2 (2026-11-26), SHA-256 50e828fb0d4a04dad64ab959defcbd562f93819bdc1c39480fab152214ce9b2b (previous: commit 7e559a1, SHA-256 fc75d1c3…76cd)
 - Draft IDEA.md SHA-256: 6cc292ac50468275a5a5d054a962a2cda9e11c2f3e681b0d6ba116b7737f3371
-- Last completed action: recorded round-5 answers and drafted IDEA.md (DIY step-by-step, faceless photoreal top-down hands, text + music, ≤10,000 VND/video)
-- Next action: wait for explicit user approval of this IDEA.md digest; answer the user's question comparing image/video AI providers
+- Last completed action: user approved IDEA.md (digest verified), PLANS.md initialized, handed off to the orchestrator
+- Next action: follow PLANS.md (Research stage)
 
 ## Clarifications and assumptions
 
@@ -81,12 +81,12 @@ See the Vietnamese approval summary at the end of IDEA.md (draft digest above).
 
 ## Approval record
 
-- Decision: pending
-- Approver and evidence reference: pending
-- Approval timestamp: pending
-- Approved IDEA.md SHA-256: pending
+- Decision: approved
+- Approver and evidence reference: repository owner (session user), Claude Code session https://claude.ai/code/session_01Sw1Ye7QBU59wV8h5hqYohk, exact words: "duyệt IDEA"
+- Approval timestamp: 2026-11-26 (UTC, after 08:14 UTC CI run on commit 7c0710a)
+- Approved IDEA.md SHA-256: 6cc292ac50468275a5a5d054a962a2cda9e11c2f3e681b0d6ba116b7737f3371
 
 ## Handoff
 
-- Project plan and first action: pending
-- Handoff checkpoint: pending
+- Project plan and first action: [PLANS.md](PLANS.md) — Research stage, R1: verify official provider pricing and API capabilities (no spend)
+- Handoff checkpoint: commit following 7c0710a on branch claude/quirky-planck-wgev52; state handed-off
