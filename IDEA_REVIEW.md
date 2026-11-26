@@ -5,7 +5,7 @@
 - Mode: INTERACTIVE
 - User language: Vietnamese
 - State: clarifying
-- Raw input reference and revision: RAW_IDEA.md revision 2 (2026-11-26), SHA-256 f9af14347521d2988f54d0eab541cb5315d3e5f83ef2a1c16bc595acca571406 (previous: commit 7e559a1, SHA-256 fc75d1c3…76cd)
+- Raw input reference and revision: RAW_IDEA.md revision 2 (2026-11-26), SHA-256 50e828fb0d4a04dad64ab959defcbd562f93819bdc1c39480fab152214ce9b2b (previous: commit 7e559a1, SHA-256 fc75d1c3…76cd)
 - Draft IDEA.md SHA-256: pending (root IDEA.md is still the template description)
 - Last completed action: user revised the raw idea to DIY step-by-step tutorial clips; RAW_IDEA.md revision 2 recorded; discovery restarted from clarification with round 5 sent
 - Next action: collect round-5 answers (sheet structure, affiliate link source, length, voice, image style, budget, platforms), then draft IDEA.md

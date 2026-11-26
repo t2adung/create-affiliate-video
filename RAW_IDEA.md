@@ -14,7 +14,7 @@ Dùng AI subcription để tạo ra ý tưởng video short 15-20s bằng cách 
 + đảm bao ko giống giả trân như AI.
 có video thì dùng git action đăng lên các nền tẳng xã hội
 
-## Revision 2 (2026-11-26) / Cập nhật ý tưởng
+### Revision 2 (2026-11-26) / Cập nhật ý tưởng
 
 Thay thế phạm vi ở trên. Giữ từ ngữ của người dùng:
 
