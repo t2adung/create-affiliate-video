@@ -7,8 +7,8 @@
 - State: clarifying
 - Raw input reference and revision: RAW_IDEA.md at commit 7e559a1, SHA-256 fc75d1c34716b9f9695c5aeb9498cc99dadf8f70a4cda489dbaf0468f8ce76cd
 - Draft IDEA.md SHA-256: pending (root IDEA.md is still the template description)
-- Last completed action: answered user's follow-up on AI quality within ~5,000 VND/clip, recurring mascots and video format options; sent clarification round 2
-- Next action: receive format/mascot choices and sample product images (Drive folder or chat), render free local demo videos as a feasibility check, then draft IDEA.md
+- Last completed action: rendered three free local demo videos (A skit, B problem→solution, C price quiz) from the user's sample product images and sent them for feedback
+- Next action: collect demo feedback, the product's real price, and remaining round-1 answers (or defaults), then draft IDEA.md
 
 ## Clarifications and assumptions
 
@@ -39,6 +39,12 @@ Proposed defaults sent in round 2:
 - Demo templates: (1) mascot skit/reaction, (2) problem → solution (before/after), (3) price-guess quiz. Demos rendered locally for free; sample images stay out of git.
 
 Questions sent: pick demo templates; mascot count/style/personality; how to share sample images; round-1 items (defaults apply if unanswered).
+
+Round 3 (2026-11-26). User answers: approve demo templates A + B + C; 2 mascots — a decor expert and a family homemaker expert. Supplied 5 product images (chat upload, kept out of git) and a product description for a Christmas mesh ribbon roll. Round-1 items still unanswered; defaults proposed.
+
+Feasibility demo (local, zero spend): Remotion 4.0.547 + React 19 in the session scratchpad (not tracked), Be Vietnam Pro font from npm @fontsource, original SVG mascots ("Mi Decor" cat decor expert, "Cô Gấu Đảm Đang" bear homemaker), synthesized public-domain melody (Jingle Bells, 1857) and SFX generated with numpy. Output: three 1080x1920 H.264/AAC 30 fps clips of 18.0 s; ffmpeg full decode passed; mean loudness about −24 dB, peak −1 to −2 dB. Render time about 2 min 21 s for all three on this container. No voice-over yet (TTS not used to keep spend at zero); price in template C is a labeled placeholder (35K).
+
+Data-quality findings from the sample description: it claims "lụa cao cấp" while the image says PP mesh fibre; dimensions mix "9M long, 26cm wide" with roll photos labelled 26cm/15cm. The pipeline needs a fact list per product so scripts only use verifiable claims.
 
 ## Research and decisions
 
