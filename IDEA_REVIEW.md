@@ -5,10 +5,10 @@
 - Mode: INTERACTIVE
 - User language: Vietnamese
 - State: clarifying
-- Raw input reference and revision: RAW_IDEA.md at commit 7e559a1, SHA-256 fc75d1c34716b9f9695c5aeb9498cc99dadf8f70a4cda489dbaf0468f8ce76cd
+- Raw input reference and revision: RAW_IDEA.md revision 2 (2026-11-26), SHA-256 f9af14347521d2988f54d0eab541cb5315d3e5f83ef2a1c16bc595acca571406 (previous: commit 7e559a1, SHA-256 fc75d1c3…76cd)
 - Draft IDEA.md SHA-256: pending (root IDEA.md is still the template description)
-- Last completed action: user rejected mascots and slideshow style; researched AI story-video options and sent round-4 options (API automation vs. subscription semi-manual vs. self-filmed)
-- Next action: get the user's choice of video-generation route, budget, affiliate network and approval for a paid AI demo (with spend cap and API key via secure form), then draft IDEA.md
+- Last completed action: user revised the raw idea to DIY step-by-step tutorial clips; RAW_IDEA.md revision 2 recorded; discovery restarted from clarification with round 5 sent
+- Next action: collect round-5 answers (sheet structure, affiliate link source, length, voice, image style, budget, platforms), then draft IDEA.md
 
 ## Clarifications and assumptions
 
@@ -49,6 +49,10 @@ Data-quality findings from the sample description: it claims "lụa cao cấp" w
 Round 4 (2026-11-26). User feedback: no mascots; wants faceless people and a real story, not a photo slideshow. Willing to spend more tokens, or use ChatGPT Pro / Gemini Pro, or any tool that generates story-like video. Asks what is needed to render such videos.
 
 Proposed in round 4: hybrid story pipeline — LLM writes a 3–4 shot faceless story (hands, back view, silhouettes, POV) + AI text-to-video/image-to-video shots with product reference images + real product-photo inserts for accuracy + Vietnamese TTS narration + subtitles/music assembled in Remotion/FFmpeg. Routes: (1) Gemini API pay-as-you-go, fully automated, about 30–45k VND/video incl. retries; (2) Google AI Pro subscription + Flow, semi-manual (no API; user pastes prompts and drops clips into Drive); (3) user films hands-only clips, AI writes script/voice/edit. Sora excluded (reported discontinued). Platform AI labels are mandatory for realistic AI video; Shopee may affect commissions for AI-labelled videos (unverified).
+
+Round 5 (2026-11-26) — scope change. User revised RAW_IDEA.md: DIY clips (Christmas decor, house cleaning, Tết, cleaning tips, flower arranging); the Sheet holds DIY guides as steps; AI turns them into many faceless step-by-step images; effects stitch them into a video; affiliate links are added based on the video. Rounds 1–4 proposals for product-centred videos and AI story video are superseded; carried forward: no mascots, faceless people, avoid plain slideshow feel, review before publishing (proposed), AI-content labelling.
+
+Proposed in round 5: one Sheet row per guide (topic, title, steps, materials with affiliate link per material, optional real product image folder); 4–6 steps, 20–30 s; image chain where each step edits the previous step image for continuity (same hands, table, light); motion effects in Remotion (camera push/pan, parallax, before/after wipe, step counter, kinetic subtitles, SFX), optional cheap image-to-video for 1 hero shot; Vietnamese TTS narration; end card with real product photos and "link in bio/giỏ hàng" mapping each material to its affiliate link. Estimated 4,000–8,000 VND/video using batch image generation (unverified until a paid test).
 
 ## Research and decisions
 
