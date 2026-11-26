@@ -4,11 +4,11 @@
 
 - Mode: INTERACTIVE
 - User language: Vietnamese
-- State: clarifying
+- State: awaiting-approval
 - Raw input reference and revision: RAW_IDEA.md revision 2 (2026-11-26), SHA-256 50e828fb0d4a04dad64ab959defcbd562f93819bdc1c39480fab152214ce9b2b (previous: commit 7e559a1, SHA-256 fc75d1c3…76cd)
-- Draft IDEA.md SHA-256: pending (root IDEA.md is still the template description)
-- Last completed action: user revised the raw idea to DIY step-by-step tutorial clips; RAW_IDEA.md revision 2 recorded; discovery restarted from clarification with round 5 sent
-- Next action: collect round-5 answers (sheet structure, affiliate link source, length, voice, image style, budget, platforms), then draft IDEA.md
+- Draft IDEA.md SHA-256: 6cc292ac50468275a5a5d054a962a2cda9e11c2f3e681b0d6ba116b7737f3371
+- Last completed action: recorded round-5 answers and drafted IDEA.md (DIY step-by-step, faceless photoreal top-down hands, text + music, ≤10,000 VND/video)
+- Next action: wait for explicit user approval of this IDEA.md digest; answer the user's question comparing image/video AI providers
 
 ## Clarifications and assumptions
 
@@ -54,6 +54,8 @@ Round 5 (2026-11-26) — scope change. User revised RAW_IDEA.md: DIY clips (Chri
 
 Proposed in round 5: one Sheet row per guide (topic, title, steps, materials with affiliate link per material, optional real product image folder); 4–6 steps, 20–30 s; image chain where each step edits the previous step image for continuity (same hands, table, light); motion effects in Remotion (camera push/pan, parallax, before/after wipe, step counter, kinetic subtitles, SFX), optional cheap image-to-video for 1 hero shot; Vietnamese TTS narration; end card with real product photos and "link in bio/giỏ hàng" mapping each material to its affiliate link. Estimated 4,000–8,000 VND/video using batch image generation (unverified until a paid test).
 
+Round 5 answers (2026-11-26): (1) Sheet A holds links to DIY tip content; AI summarises, lists materials and writes detailed steps into Sheet B, clear and complete enough for image/video generation; (2) affiliate links left blank for now; (3) 20–30 s, as many detailed steps as possible, not sketchy; (4) photoreal top-down hands-only with AI label; (5) text + music for now (no voice); (6) budget agreed (≤10,000 VND/video, 1–2/day); (7) platforms TikTok, YouTube Shorts, Facebook Reels with review before posting agreed.
+
 ## Research and decisions
 
 Sources checked 2026-11-26 (web search summaries; verify against live docs during the Research stage):
@@ -75,7 +77,7 @@ Sources checked 2026-11-26 (web search summaries; verify against live docs durin
 
 ## Vietnamese approval summary
 
-Pending draft.
+See the Vietnamese approval summary at the end of IDEA.md (draft digest above).
 
 ## Approval record
 
