@@ -265,3 +265,24 @@ Live run (`DIY_LOOK=crossfade`, synthetic paper-cup snowman guide):
   
   Next prompt changes: bright warm style presets, "hero fills 60% of height", stronger fingertips-only wording,
   and a title rule against claims not in the source.
+
+## R13. Two more crossfade clips (2026-11-27): flower (user URL) and kitchen cleaning
+
+- Flower clip (source: user-linked article, fetched by the pipeline; the script chose the "vertical
+  arrangement" style): 10 steps, bright `flower-bright-linen` look, hero vase large and centred, fingers only.
+  Step 2 ("trim stems with scissors") was flagged after 3 attempts (still images rarely show the cut) and was
+  substituted with the previous accepted frame. Frame 10 drifted 497 px on attempt 1 and was caught by the
+  gate. Cost 13,803 VND.
+- Kitchen clip (synthetic guide): bright `clean-bright-kitchen` look. The cost guard stopped it at 14,833 VND
+  before step 10's retry; the review video was rendered with step 10 substituted. The verifier caught
+  a "VINEGAR" label, "scrubbing instead of waiting" and a missing cloth. It missed a logic error: the grates
+  reappear on the stove in step 8, before "wash the grates".
+- Incidents → fixes:
+  - transient fetch failure → one fetch retry;
+  - Gemini 503 ended the guide → 4 retries with backoff;
+  - the run that predated the substitution fix rendered no video → review renders now substitute flagged frames.
+- Waste found: after the 503 crash, frame 9's first attempt was paid twice (≈1,000 VND). Resume should continue from
+  the recorded attempt count instead of attempt 0 (to do).
+- Cost picture for the crossfade look: 10 steps cost ≈10,800 VND with no retries. Action-heavy steps
+  (cutting, wiping, waiting) cause 1–2 retries each, pushing a guide to 13,800–15,000 VND. Options: fewer action
+  steps per guide, 1 retry instead of 2 on `matches_step` only, a cheaper verifier, or a higher cap.
