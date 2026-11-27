@@ -57,6 +57,11 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
   closed 2 s GOP.
 - D8 (R6): default music = original tracks synthesized in-repo; user-licensed tracks optional; Lyria library
   only after approval.
+- D9 (2026-11-27, user chose "A"): repository becomes public so GitHub-hosted Actions minutes are free; schedule
+  2 runs/day (06:00 and 18:00 Asia/Ho_Chi_Minh), each run finishes one guide end to end, waiting on Batch jobs
+  inside the job (measured ≈2.3 min per frame). Pre-publication scan: no secrets in history, noreply author
+  emails only, no media files. Secrets stay in GitHub Secrets. Reversal: if the user wants private code, run 1
+  guide/day (≈1,650 min/month) or move batch polling to Apps Script.
 - Feasibility evidence carried from discovery: local Remotion render of three 1080×1920 18 s demos, full decode
   pass, ~47 s render each (scratchpad, not tracked).
 
