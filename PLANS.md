@@ -106,6 +106,15 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
   paid tier (billing linked). Spend so far: 0.
 - Next action: user links billing in Google AI Studio; then rerun the probe and the ≤50,000 VND pilot.
 
+### 2026-11-27 — Paid pilot done
+
+- Billing linked by the user. Pilot spend 34,658 VND (cap 50,000; code stop 45,000). Results: docs/research.md R8.
+- Gates observed: continuity good by manual review; verifier too lenient (0/2 known defects caught) → MVP-4 at
+  risk; video format gates pass after `-t` trim; batch cost estimate 5,400–6,200 VND/video.
+- Three pilot videos sent to the user for feedback.
+- Next executable action: Stage 4 pipeline design incl. stronger verifier and scene-bible composition rules;
+  collect the user's feedback on the pilot videos.
+
 ## Template baseline (legacy)
 
 The repository template's own reference plan (four synthetic examples, PyMuPDF, SQLite jobs, mock providers,

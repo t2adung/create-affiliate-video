@@ -128,3 +128,41 @@ Source: https://docs.github.com/en/billing/concepts/product-billing/github-actio
 - Alternative providers (FLUX.2, GPT Image 2) were not checked against official
   pages; compare them only if the Gemini pilot fails the continuity gate.
 - Meta App Review needs and Pixabay or Lyria commercial terms remain unverified.
+
+## R8. Paid pilot (2026-11-27, approved ≤50,000 VND)
+
+Setup: three synthetic guides in `fixtures/guides/`; script and verifier `gemini-3.5-flash-lite`; step images
+`gemini-nano-banana-2.1` via `POST /v1beta/interactions` (`Api-Revision: 2026-05-20`, `response_format`
+image/jpeg 9:16 1K → 768×1376; PNG output is rejected). Each step after the first is an edit of the previous
+image with the first image as an anchor. Standard tier (not Batch) to finish within the session. Hard stop
+in code at 45,000 VND. Pilot code and images stay in the session scratchpad (not tracked).
+
+| Guide | Steps/images | Retries | Actual cost (standard) | Batch estimate |
+| --- | --- | --- | --- | --- |
+| noel-ribbon | 10 | 0 | 12,082 VND | ≈6,200 VND |
+| tet-flower-vase | 9 | 0 | 10,595 VND | ≈5,400 VND |
+| kitchen-stove-clean | 9 | 0 | 10,874 VND | ≈5,600 VND |
+| probe (1 image) | 1 | — | 1,106 VND | — |
+| **Total** | 29 images, 60 calls | | **34,658 VND** | |
+
+Findings:
+
+- Billing: image models return HTTP 429 ("limit: 0 requests per day on Free Tier") until billing is linked.
+- Image calls include about 900 thinking tokens that cannot be disabled (about $0.007 per image); one image costs about
+  $0.041 standard. Each call takes about 13–30 s.
+- Continuity (manual review of all 28 step images): same hands, sleeve, surface and light throughout;
+  progress accumulates correctly in all three guides. Defects seen by the reviewer:
+  - noel: LED lights added in step 2 fade out in steps 3–9 and only reappear in step 10;
+  - kitchen: the stove sits at the right edge instead of the center, and the person's lap shows along the bottom edge (no face).
+  
+  No faces, no text or logos, no anatomical hand errors seen.
+- Verifier: `gemini-3.5-flash-lite` passed 29/29 and missed both defects, so it is too lenient for
+  MVP-4. Next: a per-step object checklist, the stronger `gemini-3.5-flash` as verifier, and a scene-bible rule that keeps the
+  main object centered and nothing below the wrists.
+- Script quality: 9–10 steps, faithful to the source, safety notes kept (gas valve, gloves, no
+  vinegar with chlorine bleach), materials complete.
+- Render: Remotion DIY template (hook, step badge, text card above the 320 px bottom reserve, crossfades,
+  progress bar, AI label every frame, materials end card, original synthesized music). Final videos are
+  1080×1920 H.264 + AAC 48 kHz stereo, 30 fps, closed 2 s GOP, 29.9–30.0 s, 17–27 MB, full decode OK, peak
+  −7.0 to −7.3 dBFS. The raw Remotion output was 30.016 s, so the final encode trims with `-t`. 768×1376 images
+  upscaled ×1.4 still look acceptable on a phone; 2K costs $0.0504 per image if sharper output is needed.
