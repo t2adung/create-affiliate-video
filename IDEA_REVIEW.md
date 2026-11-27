@@ -4,11 +4,11 @@
 
 - Mode: INTERACTIVE
 - User language: Vietnamese
-- State: awaiting-approval
+- State: handed-off
 - Raw input reference and revision: RAW_IDEA.md revision 2 (2026-11-26), SHA-256 50e828fb0d4a04dad64ab959defcbd562f93819bdc1c39480fab152214ce9b2b (previous: commit 7e559a1, SHA-256 fc75d1c3…76cd)
 - Draft IDEA.md SHA-256: 37c05f9473c524e2d18e366cf95ce5b6bf9f933966476c36fefb391776a398e6 (revision 4)
-- Last completed action: user deferred self-filmed mode to phase 2 ("chế độ 'self' sẽ dc ở giai đoạn sau, ưu tiên ai trước"); IDEA.md revision 4 drafted (MVP = AI mode only, 900k cap kept)
-- Next action: wait for explicit approval of revision 2 digest; then update PLANS.md and resume at Stage 4
+- Last completed action: user approved IDEA.md revision 4 (digest verified); PLANS.md updated; handed off
+- Next action: follow PLANS.md (Stage 4 pipeline design, then mock-first implementation)
 
 ## Clarifications and assumptions
 
@@ -87,12 +87,12 @@ See the Vietnamese approval summary at the end of IDEA.md (draft digest above).
 
 ## Approval record
 
-- Decision: pending (revision 4)
-- Approver and evidence reference: pending
-- Approval timestamp: pending
-- Approved IDEA.md SHA-256: pending
+- Decision: approved (revision 4)
+- Approver and evidence reference: repository owner (session user), Claude Code session https://claude.ai/code/session_01Sw1Ye7QBU59wV8h5hqYohk, exact words: "duyệt IDEA"
+- Approval timestamp: 2026-11-27 (UTC, after the 08:40 UTC CI run on commit bf5a8e9)
+- Approved IDEA.md SHA-256: 37c05f9473c524e2d18e366cf95ce5b6bf9f933966476c36fefb391776a398e6
 
-History (superseded): revision 1 approved 2026-11-26 by the repository owner, words "duyệt IDEA", SHA-256 6cc292ac50468275a5a5d054a962a2cda9e11c2f3e681b0d6ba116b7737f3371.
+History (superseded): revisions 2 and 3 were drafted and never approved. Revision 1 approved 2026-11-26 by the repository owner, words "duyệt IDEA", SHA-256 6cc292ac50468275a5a5d054a962a2cda9e11c2f3e681b0d6ba116b7737f3371.
 
 ## Handoff
 

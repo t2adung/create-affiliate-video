@@ -4,12 +4,12 @@ Project: DIY step-by-step faceless video factory (Google Sheet → AI steps →
 AI images → Remotion video → reviewed publishing).
 
 - Approved specification: [IDEA.md](IDEA.md), SHA-256
-  `6cc292ac50468275a5a5d054a962a2cda9e11c2f3e681b0d6ba116b7737f3371`
-- Approval evidence: [IDEA_REVIEW.md](IDEA_REVIEW.md#approval-record) — user words "duyệt IDEA", 2026-11-26
+  `37c05f9473c524e2d18e366cf95ce5b6bf9f933966476c36fefb391776a398e6` (revision 4; revision 1 `6cc292ac…f3371` superseded)
+- Approval evidence: [IDEA_REVIEW.md](IDEA_REVIEW.md#approval-record) — user words "duyệt IDEA", 2026-11-27 (revision 4)
 - Delivery profile: MVP ([profiles/mvp.md](profiles/mvp.md))
 - Branch: `claude/quirky-planck-wgev52`, draft PR t2adung/create-affiliate-video#2
-- Approved spend: ≤10,000 VND/video, ≤600,000 VND/month. Current authorized live spend: **0** until the user
-  approves the first paid pilot (≤50,000 VND) and supplies credentials.
+- Approved spend: ≤15,000 VND/video, ≤900,000 VND/month (revision 4). Pilot budget 50,000 VND used 47,735 VND.
+  Further live runs during development need a new explicit approval; CI uses mocks only.
 
 Before any work on resume: run `sha256sum IDEA.md` and compare with the digest above. A mismatch returns
 to Idea Discovery.
@@ -21,7 +21,7 @@ to Idea Discovery.
 | 1 | Idea | idea-builder, product-manager | IDEA.md approved, digest recorded | done (commit 7c0710a + approval) |
 | 2 | Research | ai-engineer, tool-architect, security-reviewer | [docs/research.md](docs/research.md) R1–R7 from official pages (done 2026-11-26); paid image-continuity pilot pending user approval + key | in progress |
 | 3 | Input/Output specification | data-engineer, tool-architect | `docs/specification.md` from the template: Sheet A/B schemas, report.json schema, error envelope, status machine, stable keys | done (docs/specification.md) |
-| 4 | Pipeline design | tool-architect, automation-engineer, prompt-engineer | stage diagram, provider interfaces (mock + real), SQLite checkpoint schema, cost guard, prompt templates with versions | next |
+| 4 | Pipeline design | tool-architect, automation-engineer, prompt-engineer | docs/pipeline.md: stages, provider interfaces (mock + real), SQLite schema, cost guard, framing gate, style library, keyframes, prompt versions | next |
 | 5 | Implementation | data-engineer, ai-engineer, remotion-developer, video-engineer, automation-engineer | Python package + Remotion DIY template + GitHub Actions workflow, mocks first | pending |
 | 6 | Testing | qa-engineer | unit + fixture tests for MVP-1…MVP-9 incl. negative controls, offline in CI | pending |
 | 7 | Output evaluation | content-quality-reviewer, qa-engineer | `docs/templates/evaluation.md` filled: Schema, Hallucination, Batch/recovery, Idempotency, Usage, Visuals, Video, Licensing, Security | pending |
@@ -143,6 +143,13 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
 - Rev 3 added self-filmed mode; user then deferred it to phase 2. Rev 4 (MVP = AI mode only, 15,000 VND/video,
   900,000 VND/month) awaits explicit approval. Phase-2 hooks to keep in design: Sheet `mode` column, shared
   Remotion template, Drive clip folder convention.
+
+### 2026-11-27 — Revision 4 approved
+
+- Approved digest 37c05f94…776a398e6 ("duyệt IDEA"). Scope: AI mode only (MVP-1…MVP-9 as revised); self-filmed
+  mode is phase 2. Cap 15,000 VND/video, 900,000 VND/month.
+- Next executable action: Stage 4 design doc, then mock-first implementation of ingest → script → images
+  (chain + keyframes + framing gate + verifier) → render → package, with tests.
 
 ## Template baseline (legacy)
 
