@@ -19,6 +19,21 @@ def copied_span(source, generated, n=12):
     return any(tuple(gen[i:i + n]) in grams for i in range(len(gen) - n + 1))
 
 
+def normalize(j):
+    """Deterministic fixes that never change meaning: in looks without key steps, drop key flags."""
+    if isinstance(j, dict) and isinstance(j.get("steps"), list) and config.look()["keys"][1] == 0:
+        for s in j["steps"]:
+            if isinstance(s, dict):
+                s["key"] = False
+    return j
+
+
+def overlap_spans(source, generated, n=12):
+    src = _words(source); grams = {tuple(src[i:i + n]) for i in range(len(src) - n + 1)}
+    gen = _words(generated)
+    return sorted({" ".join(gen[i:i + n]) for i in range(len(gen) - n + 1) if tuple(gen[i:i + n]) in grams})
+
+
 def validate(j, source):
     errs = []
     for k, t in (("title", str), ("summary", str), ("materials", list), ("safety_notes", list), ("scene", str),
@@ -59,15 +74,20 @@ def make_script(source_text, notes, text_model, ledger, guide_id, attempts=3):
     safe = re.sub(r"<<<\s*SOURCE|SOURCE\s*>>>", "[delimiter removed]", source_text, flags=re.I)
     safe_notes = re.sub(r"<<<\s*SOURCE|SOURCE\s*>>>", "", (notes or "")[:300], flags=re.I)
     prompt = prompts.fill(tpl, ai_line=config.AI_CAPTION_LINE, notes=safe_notes, source=safe)
-    last = None
+    last, feedback = None, ""
     for a in range(attempts):
         ledger.guard(guide_id, config.EST_TEXT_USD)
-        r = text_model.generate_json(prompt)
+        r = text_model.generate_json(prompt + feedback)
         ledger.record(guide_id, f"script:{a}", r.model, config.usd_from_usage(r.model, r.usage, r.tier))
         try:
-            return validate(r.value, source_text)
+            return validate(normalize(r.value), source_text)
         except ScriptError as e:
             last = e
+            ledger.put(f"scripterr:{guide_id}:{a}", {"error": str(e)})
+            copied = overlap_spans(source_text, json.dumps(r.value, ensure_ascii=False)) if isinstance(r.value, dict) else []
+            feedback = ("\n\nYOUR PREVIOUS ANSWER WAS REJECTED: " + str(e) +
+                        (". Rewrite these parts in clearly different words: " + " | ".join(copied[:5]) if copied else "") +
+                        ". Return the full corrected JSON.")
     raise ScriptError(f"script failed validation {attempts}x: {last}")
 
 

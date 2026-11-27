@@ -395,3 +395,21 @@ class Recheck(unittest.TestCase):
         self.assertEqual(second.calls, []); self.assertTrue(all(c.endswith(":recheck") for c in ver.calls))
         self.assertEqual(r["flagged"], [])
         self.assertIsNotNone(L.get("qa:g-x:01.jpg:recheck"))
+
+
+class ScriptRetryFeedback(unittest.TestCase):
+    def test_retry_tells_model_what_failed(self):
+        src = page("noel-ribbon.html"); seen = []
+        good = providers.MockText().generate_json("<<<SOURCE\n" + src + "\nSOURCE>>>").value
+
+        def first_copies_then_ok(prompt, n):
+            seen.append(prompt)
+            j = json.loads(json.dumps(good))
+            if n == 1:
+                j["steps"][0]["detail"] = [l for l in src.splitlines() if len(l.split()) > 14][0][:200]
+            return j
+        L = ledger.Ledger(tempfile.mkdtemp() + "/s.db")
+        script.make_script(src, "", providers.MockText(override=first_copies_then_ok), L, "g-f")
+        self.assertEqual(len(seen), 2)
+        self.assertIn("YOUR PREVIOUS ANSWER WAS REJECTED", seen[1]); self.assertIn("different words", seen[1])
+        self.assertIsNotNone(L.get("scripterr:g-f:0"))
