@@ -377,6 +377,31 @@ class GoogleAdapters(unittest.TestCase):
             self.g.Session(env={}).access_token()
 
 
+class GeminiRetry(unittest.TestCase):
+    def test_transient_503_is_retried(self):
+        import io, urllib.error
+        from unittest import mock
+        from diyvideo import gemini
+        calls = []
+        class Resp(io.BytesIO):
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+        def fake(req, timeout=None, context=None):
+            calls.append(1)
+            if len(calls) < 3:
+                raise urllib.error.HTTPError(req.full_url, 503, "unavailable", {}, io.BytesIO(b'{"error":{}}'))
+            return Resp(b'{"ok": true}')
+        with mock.patch("urllib.request.urlopen", side_effect=fake), mock.patch("time.sleep"):
+            self.assertEqual(gemini._call("GET", "models"), {"ok": True})
+        self.assertEqual(len(calls), 3)
+        def always400(req, timeout=None, context=None):
+            raise urllib.error.HTTPError(req.full_url, 400, "bad", {}, io.BytesIO(b'{"key":"AIzaSyD-THIS-IS-NOT-A-REAL-KEY-123456"}'))
+        with mock.patch("urllib.request.urlopen", side_effect=always400), mock.patch("time.sleep"):
+            with self.assertRaises(gemini.ApiError) as e:
+                gemini._call("GET", "models")
+        self.assertIn("[redacted]", str(e.exception)); self.assertNotIn("AIza", str(e.exception))
+
+
 class SubstituteFlagged(unittest.TestCase):
     def test_flagged_frames_never_rendered(self):
         from diyvideo import run as runmod

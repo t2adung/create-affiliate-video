@@ -6,6 +6,7 @@ import base64, json, os, re, ssl, time, urllib.error, urllib.request
 from .providers import Result
 
 BASE = "https://generativelanguage.googleapis.com/v1beta"
+RETRIES, BACKOFF_S = 4, 5  # transient 429/5xx/network errors: 5, 10, 20, 40 s
 
 
 class PendingBatch(RuntimeError):
@@ -26,12 +27,19 @@ def _call(method, path, body=None, timeout=300):
         headers["x-goog-api-key"] = os.environ["GEMINI_API_KEY"]
     req = urllib.request.Request(f"{BASE}/{path}", method=method, headers=headers,
                                  data=json.dumps(body).encode() if body is not None else None)
-    try:
-        with urllib.request.urlopen(req, timeout=timeout, context=_ctx()) as r:
-            return json.load(r)
-    except urllib.error.HTTPError as e:
-        detail = e.read().decode(errors="replace")[:300]
-        raise ApiError(f"HTTP {e.code}: {re.sub(r'AIza[0-9A-Za-z_-]{20,}', '[redacted]', detail)}") from None
+    for attempt in range(RETRIES + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout, context=_ctx()) as r:
+                return json.load(r)
+        except urllib.error.HTTPError as e:
+            detail = e.read().decode(errors="replace")[:300]
+            if e.code in (429, 500, 502, 503, 504) and attempt < RETRIES:
+                time.sleep(BACKOFF_S * 2 ** attempt); continue
+            raise ApiError(f"HTTP {e.code}: {re.sub(r'AIza[0-9A-Za-z_-]{20,}', '[redacted]', detail)}") from None
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+            if attempt < RETRIES:
+                time.sleep(BACKOFF_S * 2 ** attempt); continue
+            raise ApiError(f"network: {e.__class__.__name__}") from None
 
 
 def _usage(resp):
