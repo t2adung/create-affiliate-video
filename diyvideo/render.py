@@ -23,7 +23,10 @@ def total_seconds(n):
 def _run(cmd, **kw):
     p = subprocess.run(cmd, capture_output=True, text=True, **kw)
     if p.returncode:
-        raise RenderError(f"{Path(cmd[0]).name} failed: {p.stderr.strip()[-600:]}")
+        lines = p.stderr.strip().splitlines()
+        key = [l for l in lines if any(w in l for w in ("Error", "error:", "Cannot", "failed", "not found", "ENOENT"))
+               and not l.lstrip().startswith("at ")]
+        raise RenderError(f"{Path(cmd[0]).name} failed: " + " | ".join((key[:6] or lines[-8:]))[:1500])
     return p.stdout
 
 
