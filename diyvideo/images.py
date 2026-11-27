@@ -60,6 +60,7 @@ def generate_frames(script, style, guide_id, out_dir, image_model, verifier, led
                     rec = {"frame": name, "gate": _slim(gate), "verify": None, "attempts": attempt + 1, "pass": False}
                     continue
                 img = framing.correct(img, gate) if prev is not None else img
+                ledger.guard(guide_id, 0.012)
                 v = verifier.check(prev, img, f"{s['on_screen']} - {s['detail']}", s.get("required_objects") or [],
                                    f"{name}:{attempt}")
                 ledger.record(guide_id, f"verify:{name}:{attempt}", v.model, config.usd_from_usage(v.model, v.usage))

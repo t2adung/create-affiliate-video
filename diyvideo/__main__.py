@@ -8,7 +8,8 @@ def make_providers(name, tier, ledger):
         return runmod.Providers(providers.MockText(), providers.MockImage(w=768, h=1376), providers.MockVerifier(), "batch")
     from . import gemini
     return runmod.Providers(gemini.GeminiText(config.SCRIPT_MODEL),
-                            gemini.GeminiImage(config.IMAGE_MODEL, ledger=ledger, tier=tier),
+                            gemini.GeminiImage(config.IMAGE_MODEL, ledger=ledger, tier=tier,
+                                              wait_s=int(os.environ.get("DIY_BATCH_WAIT_S", "600"))),
                             gemini.GeminiVerifier(config.VERIFY_MODEL, prompts.load(config.PROMPT_VERSIONS["verify"])), tier)
 
 

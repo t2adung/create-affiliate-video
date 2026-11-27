@@ -284,3 +284,65 @@ class RenderGate(unittest.TestCase):
             crops.append(cv2.imread(str(d / f"{t}.png"))[60:92, 60:330].astype(int))
         diff = abs(crops[0] - crops[1]).mean()
         self.assertGreater(diff, 5, "AI label should be visible at 1.5 s and gone at 4 s")
+
+
+class GoogleAdapters(unittest.TestCase):
+    """Sheets/Drive/YouTube adapters against a fake HTTP transport (no network, no secrets)."""
+
+    def setUp(self):
+        from diyvideo import google
+        self.g = google; self.log = []; self.sheet = {"A": [google.A_COLS, ["", "", "x" * 120, "tet", "", ""]], "B": []}
+
+        def transport(method, url, headers, body):
+            self.log.append((method, url.split("?")[0], headers.get("Authorization", "")))
+            if url == google.TOKEN_URL:
+                return 200, {}, json.dumps({"access_token": "tok", "expires_in": 3600}).encode()
+            if "/values/" in url:
+                tab = url.split("/values/")[1][0]
+                if method == "GET":
+                    return 200, {}, json.dumps({"values": self.sheet[tab]} if self.sheet[tab] else {}).encode()
+                vals = json.loads(body)["values"]
+                if ":append" in url:
+                    self.sheet[tab].extend(vals)
+                elif "!A1?" in url or url.split("!")[1].startswith("A1"):
+                    self.sheet[tab] = vals + self.sheet[tab][1:]
+                else:
+                    cell = url.split("!")[1].split("?")[0]; col = ord(cell[0]) - 65; row = int(cell[1:]) - 1
+                    while len(self.sheet[tab]) <= row: self.sheet[tab].append([])
+                    r = self.sheet[tab][row]
+                    if len(vals[0]) > 1:
+                        self.sheet[tab][row] = vals[0]
+                    else:
+                        r.extend([""] * (col + 1 - len(r))); r[col] = vals[0][0]
+                return 200, {}, b"{}"
+            if url.startswith(google.YT_UP) and method == "POST":
+                return 200, {"Location": "https://upload.example/session"}, b""
+            if url == "https://upload.example/session":
+                return 200, {}, b'{"id": "vid123"}'
+            return 404, {}, b"not found"
+        env = {"GOOGLE_OAUTH_CLIENT_ID": "c", "GOOGLE_OAUTH_CLIENT_SECRET": "s", "GOOGLE_OAUTH_REFRESH_TOKEN": "r"}
+        self.s = google.Session(transport=transport, env=env)
+
+    def test_sheet_store_roundtrip(self):
+        st = self.g.GoogleSheetStore("sheet1", self.s)
+        self.assertEqual(st.rows_a()[0]["topic"], "tet")
+        st.update_a(0, status="scripted", id="a-1")
+        self.assertEqual(st.rows_a()[0]["status"], "scripted")
+        st.upsert_b("g-1", status="needs_review", cost_vnd=9000)
+        st.upsert_b("g-1", status="approved")
+        self.assertEqual(len(st.rows_b()), 1); self.assertEqual(st.rows_b()[0]["status"], "approved")
+        self.assertEqual(st.rows_b()[0]["cost_vnd"], "9000")
+        self.assertTrue(all(a == "Bearer tok" for m, u, a in self.log if u != self.g.TOKEN_URL))
+
+    def test_youtube_discloses_ai(self):
+        f = Path(tempfile.mkdtemp()) / "v.mp4"; f.write_bytes(b"x" * 10)
+        sent = []
+        orig = self.s.call
+        self.s.call = lambda *a, **k: (sent.append(a), orig(*a, **k))[1]
+        self.assertEqual(self.g.youtube_upload(self.s, f, "Tiêu đề", "Mô tả", ["#diy"]), "vid123")
+        meta = sent[0][2]
+        self.assertTrue(meta["status"]["containsSyntheticMedia"]); self.assertEqual(meta["status"]["privacyStatus"], "private")
+
+    def test_missing_secrets(self):
+        with self.assertRaises(self.g.GoogleError):
+            self.g.Session(env={}).access_token()
