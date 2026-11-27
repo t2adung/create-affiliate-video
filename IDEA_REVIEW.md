@@ -6,8 +6,8 @@
 - User language: Vietnamese
 - State: awaiting-approval
 - Raw input reference and revision: RAW_IDEA.md revision 2 (2026-11-26), SHA-256 50e828fb0d4a04dad64ab959defcbd562f93819bdc1c39480fab152214ce9b2b (previous: commit 7e559a1, SHA-256 fc75d1c3…76cd)
-- Draft IDEA.md SHA-256: 53d56e5f7aaa9fb4daf76f655aa4aad99baac5c38fba588332addffabf1091f6 (revision 2)
-- Last completed action: paid pilot + user feedback reopened scope (motion SM-1 with pure interpolation, style rotation, locked camera, AI label 3 s, cap 15,000 VND/video); IDEA.md revision 2 drafted
+- Draft IDEA.md SHA-256: f0e2fb909027ac986596ab4766b20ff7863ee7e80c73f163aa6f6a40226dc8b8 (revision 3)
+- Last completed action: user added self-filmed mode and kept the 900,000 VND/month cap; IDEA.md revision 3 drafted (revision 2 never approved)
 - Next action: wait for explicit approval of revision 2 digest; then update PLANS.md and resume at Stage 4
 
 ## Clarifications and assumptions
@@ -58,6 +58,8 @@ Round 5 answers (2026-11-26): (1) Sheet A holds links to DIY tip content; AI sum
 
 Round 6 (2026-11-27) — feedback after paid pilot: colours fine but monotonous across videos; AI label smaller, fainter, first 3 s only ("a (nhỏ và mờ hơn 3s)"); wants smoother motion while keeping Remotion; camera framing locked between steps; chose "SM-1, nội suy thuần" (stop-motion in-betweens for 3–4 key steps rendered with pure optical-flow interpolation). Scope change → IDEA.md revision 2 with a higher cap, re-approval required.
 
+Round 7 (2026-11-27): user asked whether self-filmed footage makes transitions easier and how to film; answered with a filming guide. Decision: "thêm chế độ tự quay, giữ 900k, tôi sẽ thử chạy test trước" → revision 3 adds MVP-10 (self-filmed mode); the user will shoot a test first.
+
 ## Research and decisions
 
 Sources checked 2026-11-26 (web search summaries; verify against live docs during the Research stage):
@@ -83,7 +85,7 @@ See the Vietnamese approval summary at the end of IDEA.md (draft digest above).
 
 ## Approval record
 
-- Decision: pending (revision 2)
+- Decision: pending (revision 3)
 - Approver and evidence reference: pending
 - Approval timestamp: pending
 - Approved IDEA.md SHA-256: pending
