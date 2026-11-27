@@ -240,3 +240,28 @@ Command: `python -m diyvideo run --provider gemini --tier batch` on the syntheti
 - Follow-ups: cut cost (verify only key and last frames, or verify every 2nd frame; drop the anchor image
   after step 3); log the retry count across attempts in report.json (it currently counts only the final
   pass); emphasise the main object in the scene prompt.
+
+## R12. Crossfade look live test (2026-11-27, user reference video, cap 15,000 VND)
+
+Reference analysis (user-supplied clip, 720×1278, 20 s): about 14–16 AI stills, each held about 1–1.5 s and joined
+by crossfades (frame-difference spikes at the cuts, ghosting during dissolves); eye-level close-up, hero object at
+about 60% of the frame, warm bokeh props; fingertips only; a materials flat-lay opener and a group reveal at the end.
+
+Live run (`DIY_LOOK=crossfade`, synthetic paper-cup snowman guide):
+- 10 steps + materials shot, 2K images (1536×2752) → 1080×1920, 21.5 s, peak −10.2 dBFS, decode OK,
+  max drift 0.32 px, 0 flagged. Render ≈1.5 min (no interpolation).
+- Issues found and fixed during the run:
+  - the script was rejected 3× (a key flag in a no-key look, and a copied sentence), with no reason logged.
+    Fix: normalise key flags; retry feedback quoting the copied spans; log errors;
+  - verifier v3 was inconsistent on "arms" (rejected 2×, then passed a similar image).
+    Fix: v4 counts only forearms covering >20% of the frame and requires a concrete reason; every attempt image is saved.
+- Cost 13,327 VND, including about 2,500 VND of waste from the issues above. A clean run is ≈10,800 VND
+  (2K image ≈770–820 VND plus verifier ≈150–220 VND per frame).
+- Remaining gaps against the reference (visual review):
+  - darker style;
+  - hero object at about 35% of frame height;
+  - sleeves and hands visible in most frames;
+  - an invented qualifier ("cốc giấy bỏ đi") in the title.
+  
+  Next prompt changes: bright warm style presets, "hero fills 60% of height", stronger fingertips-only wording,
+  and a title rule against claims not in the source.
