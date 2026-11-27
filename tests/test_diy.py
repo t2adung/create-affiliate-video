@@ -346,3 +346,36 @@ class GoogleAdapters(unittest.TestCase):
     def test_missing_secrets(self):
         with self.assertRaises(self.g.GoogleError):
             self.g.Session(env={}).access_token()
+
+
+class SubmitAndExit(unittest.TestCase):
+    """A pending image batch ends the run immediately; the next run resumes without re-submitting finished frames."""
+
+    def test_pending_then_resume(self):
+        from unittest import mock
+        from diyvideo import run as runmod, sheets, gemini
+        d = Path(tempfile.mkdtemp()); store = sheets.LocalSheetStore(d / "sheet.json")
+        data = store._load(); data["A"] = [{"source_text": page("noel-ribbon.html"), "topic": "noel"}]; store._save(data)
+        L = ledger.Ledger(str(d / "s.db"))
+
+        class SlowThenReady(providers.MockImage):
+            pending_at = {"03.jpg:0"}
+
+            def generate(self, prompt, refs, label, job_key=None):
+                if label in self.pending_at:
+                    self.pending_at.discard(label)
+                    raise gemini.PendingBatch(label)
+                return super().generate(prompt, refs, label)
+        img = SlowThenReady()
+        prov = runmod.Providers(providers.MockText(), img, providers.MockVerifier(), "batch")
+        with mock.patch("diyvideo.render.render", side_effect=lambda sc, fd, out, workdir=None:
+                        (Path(out).parent.mkdir(parents=True, exist_ok=True), Path(out).write_bytes(b"v"),
+                         {"duration_s": 30.0})[2]):
+            runmod.run(store, L, prov, d / "out", d / "work")
+            b = store.rows_b()[0]
+            self.assertEqual((b["status"], b["error"][:7]), ("rendering", "waiting"))
+            first_calls = list(img.calls)
+            runmod.run(store, L, prov, d / "out", d / "work")
+        self.assertEqual(store.rows_b()[0]["status"], "needs_review")
+        resumed = img.calls[len(first_calls):]
+        self.assertFalse(any(c.startswith(("01.jpg", "02")) for c in resumed), resumed)

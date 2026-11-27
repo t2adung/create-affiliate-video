@@ -93,6 +93,22 @@ def process_regenerate(store, ledger, prov, out_root, work_root):
         build(store, ledger, prov, gid, sc, style, {"url": row.get("source_url")}, out_root, work_root)
 
 
+def process_pending(store, ledger, prov, out_root, work_root):
+    """Resume guides whose image batch was still running on a previous run (submit-and-exit design)."""
+    resumed = 0
+    for row in store.rows_b():
+        if row.get("status") != "rendering" or not str(row.get("error", "")).startswith("waiting"):
+            continue
+        gid = row["guide_id"]; sc = ledger.get(f"script:{gid}")
+        style = next((s for s in styles.STYLES if s["id"] == row.get("style_id")), None)
+        if not sc or not style:
+            store.upsert_b(gid, status="failed", error="cannot resume: missing script or style"); continue
+        build(store, ledger, prov, gid, sc, style, {"url": row.get("source_url")}, out_root, work_root)
+        resumed += 1
+    return resumed
+
+
 def run(store, ledger, prov, out_root, work_root):
+    process_pending(store, ledger, prov, out_root, work_root)
     process_regenerate(store, ledger, prov, out_root, work_root)
     return process_new(store, ledger, prov, out_root, work_root)
