@@ -88,7 +88,7 @@ class MockVerifier:
 
     def check(self, prev, cur, step_text, required, label):
         self.calls.append(label)
-        v = {"face_visible": False, "body_above_wrists_visible": False, "hands_ok": True, "matches_step": True,
+        v = {"face_visible": False, "head_or_shoulders_visible": False, "hands_ok": True, "matches_step": True,
              "continuity_ok": True, "required_objects_present": True, "text_or_logo": False, "issues": ""}
         v.update(self.script.get(label, {}))
         return Result(value=v, model=self.model, usage={"in": 600, "text_out": 80})
@@ -97,4 +97,5 @@ class MockVerifier:
 def verdict_pass(v):
     return bool(v.get("hands_ok") and v.get("matches_step") and v.get("continuity_ok")
                 and v.get("required_objects_present") and not v.get("face_visible")
-                and not v.get("body_above_wrists_visible") and not v.get("text_or_logo"))
+                and not v.get("head_or_shoulders_visible") and not v.get("text_or_logo")
+                and "face_visible" in v and "hands_ok" in v)

@@ -379,3 +379,17 @@ class SubmitAndExit(unittest.TestCase):
         self.assertEqual(store.rows_b()[0]["status"], "needs_review")
         resumed = img.calls[len(first_calls):]
         self.assertFalse(any(c.startswith(("01.jpg", "02")) for c in resumed), resumed)
+
+
+class Recheck(unittest.TestCase):
+    def test_existing_frame_is_reverified_not_regenerated(self):
+        d = Path(tempfile.mkdtemp()); L = ledger.Ledger(str(d / "s.db"))
+        sc = script.make_script(page("noel-ribbon.html"), "", providers.MockText(), L, "g-x")
+        first = providers.MockImage()
+        images.generate_frames(sc, styles.pick("noel"), "g-x", d / "f", first, providers.MockVerifier(), L)
+        L.db.execute("DELETE FROM results"); L.db.commit()  # e.g. prompt version changed → no committed records
+        second = providers.MockImage(); ver = providers.MockVerifier()
+        r = images.generate_frames(sc, styles.pick("noel"), "g-x", d / "f", second, ver, L)
+        self.assertEqual(second.calls, []); self.assertTrue(all(c.endswith(":recheck") for c in ver.calls))
+        self.assertEqual(r["flagged"], [])
+        self.assertIsNotNone(L.get("qa:g-x:01.jpg:recheck"))

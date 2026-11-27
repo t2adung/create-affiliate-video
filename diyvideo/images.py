@@ -22,7 +22,7 @@ def frame_prompt(script, style, f, attempt, progress):
     else:
         instr = (f"Step {s['n']} in progress ({PHASES[f['k']]}). Final state of this step will be: {s['image_prompt']}. "
                  "Only the hands and the items they handle move a little compared with the previous photo.")
-    body = prompts.fill(prompts.load("image_v1"), style=styles.describe(style), scene=script["scene"],
+    body = prompts.fill(prompts.load(config.PROMPT_VERSIONS["image"]), style=styles.describe(style), scene=script["scene"],
                         frame_instruction=instr, required=", ".join(s.get("required_objects") or []) or "none")
     if f["step"] > 1 or f["k"] > 1:
         body = prompts.load("edit_lock_v1") + "\n" + body
@@ -48,7 +48,21 @@ def generate_frames(script, style, guide_id, out_dir, image_model, verifier, led
             img = (out_dir / name).read_bytes(); rec = cached
         else:
             rec = None
+            existing = (out_dir / name)
+            if existing.exists() and existing.stat().st_size and verifier is not None:
+                img = existing.read_bytes()
+                gate = framing.measure(prev, img) if prev is not None else {"pass": True, "reason": "first"}
+                if gate["pass"]:
+                    ledger.guard(guide_id, 0.012)
+                    v = verifier.check(prev, img, f"{s['on_screen']} - {s['detail']}", s.get("required_objects") or [],
+                                       f"{name}:recheck")
+                    ledger.record(guide_id, f"verify:{name}:recheck", v.model, config.usd_from_usage(v.model, v.usage))
+                    ledger.put(f"qa:{guide_id}:{name}:recheck", {"gate": _slim(gate), "verify": v.value})
+                    if verdict_pass(v.value):
+                        rec = {"frame": name, "gate": _slim(gate), "verify": v.value, "attempts": 0, "pass": True}
             for attempt in range(max_retries + 1):
+                if rec and rec["pass"]:
+                    break
                 ledger.guard(guide_id, config.EST_FRAME_USD[tier] + 0.003)
                 refs = [] if prev is None else ([prev] if first is prev else [first, prev])
                 r = image_model.generate(frame_prompt(script, style, f, attempt, idx), refs, f"{name}:{attempt}",
@@ -58,6 +72,7 @@ def generate_frames(script, style, guide_id, out_dir, image_model, verifier, led
                 gate = framing.measure(prev, img) if prev is not None else {"pass": True, "reason": "first"}
                 if not gate["pass"]:
                     rec = {"frame": name, "gate": _slim(gate), "verify": None, "attempts": attempt + 1, "pass": False}
+                    ledger.put(f"qa:{guide_id}:{name}:{attempt}", rec)
                     continue
                 img = framing.correct(img, gate) if prev is not None else img
                 ledger.guard(guide_id, 0.012)
@@ -66,6 +81,7 @@ def generate_frames(script, style, guide_id, out_dir, image_model, verifier, led
                 ledger.record(guide_id, f"verify:{name}:{attempt}", v.model, config.usd_from_usage(v.model, v.usage))
                 ok = verdict_pass(v.value)
                 rec = {"frame": name, "gate": _slim(gate), "verify": v.value, "attempts": attempt + 1, "pass": ok}
+                ledger.put(f"qa:{guide_id}:{name}:{attempt}", rec)
                 if ok:
                     break
             (out_dir / name).write_bytes(img)

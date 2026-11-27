@@ -70,7 +70,7 @@ class GeminiText:
     def generate_json(self, prompt):
         resp = _call("POST", f"models/{self.model}:generateContent", {
             "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-            "generationConfig": {"responseMimeType": "application/json"}})
+            "generationConfig": {"responseMimeType": "application/json", "thinkingConfig": {"thinkingLevel": "LOW"}}})
         parts, finish = _parts(resp)
         text = "".join(p.get("text", "") for p in parts if not p.get("thought"))
         try:
@@ -90,7 +90,8 @@ class GeminiVerifier:
             parts += [{"text": "PREVIOUS image:"}, {"inlineData": {"mimeType": "image/jpeg", "data": base64.b64encode(prev).decode()}}]
         parts += [{"text": "CURRENT image:"}, {"inlineData": {"mimeType": "image/jpeg", "data": base64.b64encode(cur).decode()}}]
         resp = _call("POST", f"models/{self.model}:generateContent", {
-            "contents": [{"role": "user", "parts": parts}], "generationConfig": {"responseMimeType": "application/json"}})
+            "contents": [{"role": "user", "parts": parts}],
+            "generationConfig": {"responseMimeType": "application/json", "thinkingConfig": {"thinkingLevel": "LOW"}}})
         ps, _ = _parts(resp)
         try:
             v = json.loads("".join(p.get("text", "") for p in ps if not p.get("thought")))
