@@ -95,6 +95,17 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
   stage interfaces, recovery and idempotency, fixtures, cost guard, credentials).
 - Next executable action: Stage 4 pipeline design + mock implementation skeleton; run the pilot once the key works.
 
+### 2026-11-27 — Gemini key check
+
+- User added the key as a network secret (header `x-goog-api-key`). `GET /v1beta/models` → 200; 65 models incl.
+  `gemini-nano-banana-2.1`, `gemini-3.5-flash-lite`.
+- Images use `POST /v1beta/interactions` (`Api-Revision: 2026-05-20`), `response_format` `{type:image,
+  mime_type:image/jpeg (png rejected), aspect_ratio:9:16, image_size:1K}`; multi-turn via
+  `previous_interaction_id`.
+- Blocker: HTTP 429 "limit: 0 requests per day on Free Tier" for `gemini-nano-banana-2.1`. The project needs the
+  paid tier (billing linked). Spend so far: 0.
+- Next action: user links billing in Google AI Studio; then rerun the probe and the ≤50,000 VND pilot.
+
 ## Template baseline (legacy)
 
 The repository template's own reference plan (four synthetic examples, PyMuPDF, SQLite jobs, mock providers,
