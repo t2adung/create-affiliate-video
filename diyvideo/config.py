@@ -23,7 +23,7 @@ VERIFY_MODEL = "gemini-3.5-flash"
 LOOKS = {
     "sm1": {"script": "script_v1", "image": "image_v2", "edit": "edit_lock_v1", "verify": "verify_v2",
             "steps": (6, 10), "keys": (3, 4), "on_screen_max": 60, "image_size": "1K", "materials_frame": False},
-    "crossfade": {"script": "script_v2", "image": "image_v3", "edit": "edit_lock_v2", "verify": "verify_v4",
+    "crossfade": {"script": "script_v3", "image": "image_v4", "edit": "edit_lock_v2", "verify": "verify_v4",
                   "steps": (10, 14), "keys": (0, 0), "on_screen_max": 40, "image_size": "2K", "materials_frame": True},
 }
 LOOK = os.environ.get("DIY_LOOK", "crossfade")

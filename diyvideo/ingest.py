@@ -39,6 +39,7 @@ class _Text(HTMLParser):
 def html_to_text(html):
     p = _Text(); p.feed(html)
     text = re.sub(r"[ \t\r\f\v]+", " ", "".join(p.out))
+    text = "\n".join(l for l in text.splitlines() if l.strip(" -•\t"))  # drop empty bullets from menus
     return re.sub(r"\n\s*\n+", "\n", text).strip()
 
 
@@ -58,9 +59,19 @@ def check_url(url, resolve=socket.getaddrinfo):
     host = u.hostname.lower()
     if any(host == h or host.endswith("." + h) for h in VIDEO_HOSTS) or u.path.lower().endswith(".pdf"):
         raise SourceError("unsupported_source", "video or PDF sources are not supported; paste the text instead")
+    if host == "localhost" or host.endswith((".local", ".internal", ".localhost")):
+        raise SourceError("blocked_host", "local host names are not allowed")
+    try:
+        literal = ipaddress.ip_address(host.strip("[]"))
+    except ValueError:
+        literal = None
+    if literal is not None and not literal.is_global:
+        raise SourceError("blocked_host", "private or reserved IP address")
     try:
         addrs = {ai[4][0] for ai in resolve(host, None)}
     except OSError as e:
+        if os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy"):
+            return u  # egress proxy resolves and enforces the allowlist; literal/local checks above still apply
         raise SourceError("fetch_failed", f"cannot resolve host ({e.__class__.__name__})")
     for a in addrs:
         ip = ipaddress.ip_address(a.split("%")[0])

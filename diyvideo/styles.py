@@ -1,5 +1,18 @@
 """Style library: per-video looks so consecutive videos differ (IDEA revision 4)."""
 STYLES = [
+    # bright, warm looks first (user reference video, 2026-11-27); darker looks remain as fallbacks
+    {"id": "noel-bright-cosy", "topics": ["noel"], "surface": "warm honey-wood table",
+     "sleeve": "no sleeves visible", "light": "bright warm daylight with glowing fairy-light bokeh, lanterns and gift boxes",
+     "palette": "cream white, Christmas red, pine green, gold"},
+    {"id": "flower-bright-linen", "topics": ["cam-hoa", "tet"], "surface": "light oak table with a white linen runner",
+     "sleeve": "no sleeves visible", "light": "soft bright morning window light, airy and fresh, blurred plants behind",
+     "palette": "white, blush pink, sage green, soft yellow"},
+    {"id": "clean-bright-kitchen", "topics": ["don-dep", "meo-don-dep"], "surface": "white quartz kitchen counter",
+     "sleeve": "no sleeves visible", "light": "bright clean daylight, blurred white tiles and potted herbs behind",
+     "palette": "white, fresh mint, lemon yellow, light grey"},
+    {"id": "tet-bright-festive", "topics": ["tet"], "surface": "light wooden table with a red silk runner",
+     "sleeve": "no sleeves visible", "light": "bright warm sunlight, blurred apricot blossoms and red lanterns behind",
+     "palette": "lucky red, gold, warm yellow, cream"},
     {"id": "noel-forest-linen", "topics": ["noel"], "surface": "dark moss-green linen tablecloth",
      "sleeve": "burgundy knit sweater sleeves", "light": "warm evening lamp light with soft golden bokeh",
      "palette": "deep green, burgundy, warm gold"},

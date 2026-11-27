@@ -45,6 +45,18 @@ class Ingest(unittest.TestCase):
                 ingest.check_url("http://internal.test/x", resolve=lambda h, p: [(0, 0, 0, "", (addr, 0))])
             self.assertEqual(e.exception.code, "blocked_host")
 
+    def test_literal_and_local_hosts_blocked_even_behind_proxy(self):
+        import os
+        from unittest import mock
+        def fail(h, p): raise OSError("no dns")
+        with mock.patch.dict(os.environ, {"HTTPS_PROXY": "http://proxy:3128"}):
+            for url in ("http://127.0.0.1/x", "http://[::1]/x", "http://localhost/x", "http://metadata.internal/x",
+                        "http://10.1.2.3/x"):
+                with self.subTest(url=url), self.assertRaises(ingest.SourceError) as e:
+                    ingest.check_url(url, resolve=fail)
+                self.assertEqual(e.exception.code, "blocked_host")
+            ingest.check_url("https://example.com/x", resolve=fail)  # proxy enforces egress
+
     def test_truncation_at_paragraph(self):
         text = ("Đoạn văn hướng dẫn mẫu dài vừa phải. " * 40 + "\n") * 20
         out, cut = ingest.truncate(text)
