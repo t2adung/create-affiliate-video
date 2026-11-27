@@ -39,6 +39,18 @@ class Ingest(unittest.TestCase):
                                   if not ingest.check_url(u, resolve=public) else page("noel-ribbon.html"))
                 self.assertEqual(e.exception.code, code)
 
+    def test_fetch_retries_once(self):
+        from unittest import mock
+        calls = []
+        def flaky(u):
+            calls.append(u)
+            if len(calls) == 1:
+                raise ingest.SourceError("fetch_failed", "ConnectionResetError")
+            return page("noel-ribbon.html")
+        with mock.patch("time.sleep"):
+            r = ingest.ingest({"source_url": "https://example.com/a", "topic": "noel"}, fetcher=flaky)
+        self.assertEqual(len(calls), 2); self.assertGreater(len(r["text"]), 200)
+
     def test_ssrf_blocked(self):
         for addr in ("127.0.0.1", "10.0.0.5", "169.254.169.254", "::1"):
             with self.subTest(addr=addr), self.assertRaises(ingest.SourceError) as e:

@@ -99,8 +99,8 @@ def fetch(url, opener=None):
             if not (ctype.startswith("text/html") or ctype.startswith("text/plain")):
                 raise SourceError("unsupported_source", f"content type {ctype.split(';')[0] or 'unknown'}")
             body = r.read(config.FETCH_MAX_BYTES + 1)
-    except urllib.error.URLError as e:
-        raise SourceError("fetch_failed", e.__class__.__name__)
+    except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+        raise SourceError("fetch_failed", f"{e.__class__.__name__}: {str(getattr(e, 'reason', e))[:80]}")
     if len(body) > config.FETCH_MAX_BYTES:
         raise SourceError("too_large", "page over 2 MB")
     charset = "utf-8"
@@ -123,7 +123,14 @@ def ingest(row, fetcher=fetch):
         if len(text) > config.SOURCE_MAX_CHARS:
             raise SourceError("too_large", "source_text over 20,000 chars")
     else:
-        text = fetcher(url)
+        text = None
+        for attempt in range(2):  # specification: one retry for transient fetch failures
+            try:
+                text = fetcher(url); break
+            except SourceError as e:
+                if e.code != "fetch_failed" or attempt == 1:
+                    raise
+                import time; time.sleep(3)
     if len(text.strip()) < 80:
         raise SourceError("empty_text", "too little readable text")
     text, truncated = truncate(text)
