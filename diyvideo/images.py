@@ -71,6 +71,8 @@ def generate_frames(script, style, guide_id, out_dir, image_model, verifier, led
                                          **({"job_key": f"{guide_id}:{base_key}:{attempt}"} if getattr(image_model, "tier", None) == "batch" else {}))
                 ledger.record(guide_id, f"img:{name}:{attempt}", r.model, config.usd_from_usage(r.model, r.usage, r.tier))
                 img = r.value
+                (out_dir / "attempts").mkdir(exist_ok=True)
+                (out_dir / "attempts" / f"{name[:-4]}-a{attempt}.jpg").write_bytes(img)  # kept for review/diagnosis
                 gate = framing.measure(prev, img) if prev is not None else {"pass": True, "reason": "first"}
                 if not gate["pass"]:
                     rec = {"frame": name, "gate": _slim(gate), "verify": None, "attempts": attempt + 1, "pass": False}
