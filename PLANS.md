@@ -124,6 +124,14 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
 - Next: user chooses A (Remotion, ≈6k), B (3 AI moments, ≈22k) or C (all AI, ≈50k); then revise IDEA.md
   (style rotation, label rule, AI video scope and cap if B/C) and request re-approval.
 
+### 2026-11-27 — Locked camera + stop-motion test
+
+- Framing gate works (caught tet drift, retry fixed). Stop-motion frames lock well; interpolation between
+  locked frames is usable. New prompt rule needed: lock hand entry direction. Pilot total 47,735 / 50,000 VND
+  (pilot budget effectively exhausted; further paid tests need new approval).
+- Next: user chooses the motion approach (A / B / C / stop-motion variants); then revise IDEA.md (style
+  rotation, AI-label rule, framing gate, motion approach, cap) for re-approval.
+
 ## Template baseline (legacy)
 
 The repository template's own reference plan (four synthetic examples, PyMuPDF, SQLite jobs, mock providers,

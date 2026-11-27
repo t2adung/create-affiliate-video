@@ -207,3 +207,15 @@ Decision for the pipeline:
    gets warped. Large drift or <30% inliers triggers a regeneration with a stricter instruction
    (≤2 times), then the image is flagged for review.
 3. The framing gate also feeds the Omni interpolation choice: interpolate only between frame-locked pairs.
+- Paid test (approved, 2026-11-27): locked-camera regeneration plus a framing gate (`tools/locktest.py`).
+  - Noel 06: locked on the first try (shift 0.2 px). The hands switched to entering from the bottom edge,
+    so the prompt must also lock hand direction.
+  - Tết 03: first try drifted (scale 1.055, 3.5°, 226 px), which the gate caught; the retry locked
+    (1.5 px).
+  - Stop-motion: 3 in-between frames for noel step 5. All locked (≤0.4 px) with visible gradual hand
+    motion. Their end state did not match the pre-existing step 5 image; in production the last
+    stop-motion frame becomes the step image.
+  - Playback at 2.5 frames/s is readable as stop-motion. `minterpolate` between locked frames gives
+    smooth motion with mild ghosting on the ribbon. Interpolation does work when frames are locked and
+    the changes are small (unlike R9).
+- Pilot spend total: 47,735 VND of the approved 50,000 VND (6 images in this test, 7,449 VND).
