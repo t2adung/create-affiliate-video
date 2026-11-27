@@ -166,3 +166,14 @@ Findings:
   1080×1920 H.264 + AAC 48 kHz stereo, 30 fps, closed 2 s GOP, 29.9–30.0 s, 17–27 MB, full decode OK, peak
   −7.0 to −7.3 dBFS. The raw Remotion output was 30.016 s, so the final encode trims with `-t`. 768×1376 images
   upscaled ×1.4 still look acceptable on a phone; 2K costs $0.0504 per image if sharper output is needed.
+
+## R9. Smoother step transitions (2026-11-27, user feedback)
+
+- FFmpeg optical-flow interpolation (`minterpolate`, mci/aobmc/bidir) between noel steps 05→06: no usable
+  motion; frames jump at the midpoint (the scene change is too large). Rejected.
+- Gemini Omni Flash (`gemini-omni-1.2-flash`, https://ai.google.dev/gemini-api/docs/omni): first-and-last-frame
+  interpolation, 3–10 s per clip, 9:16 supported, 360p/720p/1080p. Price: $12/1M video tokens
+  (5,792 tokens/s at 720p) ≈ $0.07/s at 720p, $0.023/s at 360p, $0.104/s at 1080p. No Batch tier listed.
+- Per video with 9 steps: all transitions AI (8 × 3 s = 24 s at 720p) ≈ $1.68 ≈ 44,000 VND, plus images. Three
+  key transitions only (9 s) ≈ $0.63 ≈ 16,400 VND + ≈6,000 VND images ≈ 22,000 VND. Both exceed the approved
+  10,000 VND/video cap and AI video is an IDEA exclusion, so either option needs a revised and re-approved IDEA.
