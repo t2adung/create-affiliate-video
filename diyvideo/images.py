@@ -22,10 +22,10 @@ def frame_prompt(script, style, f, attempt, progress):
     else:
         instr = (f"Step {s['n']} in progress ({PHASES[f['k']]}). Final state of this step will be: {s['image_prompt']}. "
                  "Only the hands and the items they handle move a little compared with the previous photo.")
-    body = prompts.fill(prompts.load(config.PROMPT_VERSIONS["image"]), style=styles.describe(style), scene=script["scene"],
+    body = prompts.fill(prompts.load(config.look()["image"]), style=styles.describe(style), scene=script["scene"],
                         frame_instruction=instr, required=", ".join(s.get("required_objects") or []) or "none")
     if f["step"] > 1 or f["k"] > 1:
-        body = prompts.load("edit_lock_v1") + "\n" + body
+        body = prompts.load(config.look()["edit"]) + "\n" + body
     if attempt:
         body += "\nPREVIOUS ATTEMPT FAILED REVIEW (camera moved or content wrong). Keep the framing identical."
     return body + f"\n[progress={progress}]"
@@ -37,12 +37,14 @@ def generate_frames(script, style, guide_id, out_dir, image_model, verifier, led
     from .script import frame_plan
     plan = frame_plan(script)
     frames, flags, first, prev = [], [], None, None
+    if config.look()["materials_frame"]:
+        frames.append(materials_frame(script, style, guide_id, out_dir, image_model, ledger, tier))
     for idx, f in enumerate(plan, 1):
         name = f"{f['step']:02d}.jpg" if f["last"] else f"{f['step']:02d}-k{f['k']}.jpg"
         s = script["steps"][f["step"] - 1]
         visual = {k: s.get(k) for k in ("n", "image_prompt", "required_objects", "key")}  # text edits don't re-bill
         base_key = sha(guide_id, name, json.dumps(visual, sort_keys=True, ensure_ascii=False), script["scene"], style["id"],
-                       config.IMAGE_MODEL, config.PROMPT_VERSIONS["image"], sha(prev or b""))
+                       config.IMAGE_MODEL, config.look()["image"], config.look()["edit"], sha(prev or b""))
         cached = ledger.get(f"img:{base_key}")
         if cached and (out_dir / name).exists():
             img = (out_dir / name).read_bytes(); rec = cached
@@ -95,6 +97,24 @@ def generate_frames(script, style, guide_id, out_dir, image_model, verifier, led
         first = first or img
         prev = img
     return {"frames": frames, "flagged": flags}
+
+
+def materials_frame(script, style, guide_id, out_dir, image_model, ledger, tier):
+    """Opening flat-lay of the materials: independent of the chain (different composition), no gate/verifier."""
+    out = Path(out_dir) / "00.jpg"
+    key = sha(guide_id, "00", json.dumps(script["materials"], ensure_ascii=False), script.get("materials_scene"),
+              style["id"], config.IMAGE_MODEL)
+    if not (ledger.get(f"img:{key}") and out.exists()):
+        ledger.guard(guide_id, config.EST_FRAME_USD[tier] + 0.003)
+        prompt = prompts.fill(prompts.load("materials_v1"), style=styles.describe(style),
+                              materials=", ".join(f"{m['name']} ({m.get('qty', '')})" for m in script["materials"]),
+                              scene=script.get("materials_scene", "")) + "\n[progress=0]"
+        r = image_model.generate(prompt, [], "00.jpg:0",
+                                 **({"job_key": f"{guide_id}:{key}:0"} if getattr(image_model, "tier", None) == "batch" else {}))
+        ledger.record(guide_id, "img:00.jpg:0", r.model, config.usd_from_usage(r.model, r.usage, r.tier))
+        out.write_bytes(r.value); ledger.put(f"img:{key}", {"frame": "00.jpg"})
+    return {"step": 0, "k": 1, "last": True, "key": False, "file": "00.jpg",
+            "qa": {"frame": "00.jpg", "gate": {}, "verify": None, "attempts": 1, "pass": True}}
 
 
 def _slim(g):

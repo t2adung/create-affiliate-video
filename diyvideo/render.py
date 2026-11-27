@@ -1,7 +1,7 @@
 """Frames + script → final MP4 (MVP-5): key-step interpolation clips, Remotion render, exact encode, probes."""
 import json, os, shutil, subprocess, tempfile
 from pathlib import Path
-from . import audio
+from . import audio, config
 
 REMOTION = Path(__file__).parent / "remotion"
 FPS = 30
@@ -12,12 +12,21 @@ class RenderError(RuntimeError):
     pass
 
 
+def timing(n):
+    """Frames per segment for the active look (Remotion receives these as props)."""
+    if config.LOOK == "crossfade":
+        step = round(max(1.2, min(1.6, (24 - 1.5 - 1.5 - 2.5) / n)) * FPS)
+        return {"hook": 45, "mats": 45, "step": step, "end": 75, "xfade": 9, "zoom": 0.035}
+    return {"hook": 60, "mats": 0, "step": round(min(3.0, 25 / n) * FPS), "end": 90, "xfade": 8, "zoom": 0.08}
+
+
 def step_seconds(n):
-    return round(min(3.0, 25 / n) * FPS) / FPS
+    return timing(n)["step"] / FPS
 
 
 def total_seconds(n):
-    return 2 + n * step_seconds(n) + 3
+    t = timing(n)
+    return (t["hook"] + t["mats"] + n * t["step"] + t["end"]) / FPS
 
 
 def _run(cmd, **kw):
@@ -61,7 +70,11 @@ def build_public(script, frames_dir, frame_plan, stage):
                 entry["clip"] = f"g/{s['n']:02d}-clip.mp4"
         steps.append(entry)
     has_links = any((m.get("link") or "").startswith("https://") for m in script["materials"])
-    return {"guide": {"title": script["title"], "hook": f"g/{n:02d}.jpg", "steps": steps,
+    mats = None
+    if (Path(frames_dir) / "00.jpg").exists():
+        shutil.copy(Path(frames_dir) / "00.jpg", g / "00.jpg"); mats = "g/00.jpg"
+    return {"guide": {"title": script["title"], "hook": f"g/{n:02d}.jpg", "steps": steps, "mats": mats,
+                      "timing": timing(n), "compact": config.LOOK == "crossfade",
                       "materials": [{"name": m["name"], "qty": m.get("qty", "")} for m in script["materials"]],
                       "hasLinks": has_links}}
 
@@ -98,7 +111,7 @@ def check(p, n):
     if not 20.0 <= p["duration_s"] <= 30.05: errs.append(f"duration {p['duration_s']}")
     if p["size_mb"] > 50: errs.append("size")
     if p["peak_dbfs"] is None or p["peak_dbfs"] > -1.0: errs.append(f"peak {p['peak_dbfs']}")
-    if step_seconds(n) < 2.5: errs.append("step < 2.5 s")
+    if step_seconds(n) < (1.2 if config.LOOK == "crossfade" else 2.5): errs.append("step too short")
     if errs:
         raise RenderError("video checks failed: " + ", ".join(errs))
     return True

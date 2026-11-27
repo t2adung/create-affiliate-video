@@ -6,10 +6,10 @@ import '@fontsource/be-vietnam-pro/700.css';
 import '@fontsource/be-vietnam-pro/800.css';
 import '@fontsource/be-vietnam-pro/900.css';
 
-export const FPS = 30, W = 1080, H = 1920;
-export const HOOK = 2 * FPS, END = 3 * FPS, LABEL_FRAMES = 3 * FPS, XFADE = 8;
-export const stepFrames = (n) => Math.round(Math.min(3.0, 25 / n) * FPS);
-export const totalFrames = (n) => HOOK + n * stepFrames(n) + END;
+export const FPS = 30, W = 1080, H = 1920, LABEL_FRAMES = 3 * FPS;
+const DEFAULT_T = (n) => ({hook: 60, mats: 0, step: Math.round(Math.min(3.0, 25 / n) * FPS), end: 90, xfade: 8, zoom: 0.08});
+export const timingOf = (g) => g.timing || DEFAULT_T(g.steps.length);
+export const totalFrames = (g) => { const t = timingOf(g); return t.hook + t.mats + g.steps.length * t.step + t.end; };
 const SAFE = 60, BOTTOM = 320;
 const FONT = "'Be Vietnam Pro', 'Noto Color Emoji', sans-serif";
 
@@ -17,10 +17,11 @@ function Sfx({at, name, volume = 0.5}) {
   return <Sequence from={at} layout="none"><Audio src={staticFile(`audio/${name}.wav`)} volume={volume} /></Sequence>;
 }
 
-function KenBurns({src, dur, variant = 0, blur = 0}) {
+function KenBurns({src, dur, variant = 0, blur = 0, zoom = 0.08}) {
   const f = useCurrentFrame();
   const p = interpolate(f, [0, dur], [0, 1], {extrapolateRight: 'clamp', easing: Easing.inOut(Easing.sin)});
-  const moves = [[1.0, 1.08, 0, -20], [1.08, 1.02, 15, 8], [1.03, 1.1, -18, 0], [1.07, 1.0, 0, 18]];
+  const z = zoom, m = zoom * 250;
+  const moves = [[1.0, 1 + z, 0, -m], [1 + z, 1.0, m * .7, m * .4], [1.0, 1 + z, -m * .8, 0], [1 + z, 1.0, 0, m]];
   const [a, b, dx, dy] = moves[variant % moves.length];
   return <AbsoluteFill style={{overflow: 'hidden', background: '#000'}}>
     <Img src={staticFile(src)} style={{width: W, height: H, objectFit: 'cover',
@@ -55,9 +56,16 @@ function Progress({total}) {
     background: 'linear-gradient(90deg,#ffd166,#ef476f)'}} />;
 }
 
-function StepCard({n, total, text}) {
+function StepCard({n, total, text, compact}) {
   const f = useCurrentFrame(); const {fps} = useVideoConfig();
   const k = spring({frame: f - 3, fps, config: {damping: 13, stiffness: 170}});
+  if (compact) {
+    return <div style={{position: 'absolute', left: SAFE, right: SAFE, bottom: BOTTOM, display: 'flex', justifyContent: 'center',
+      opacity: k, transform: `translateY(${(1 - k) * 30}px)`}}>
+      <div style={{fontFamily: FONT, fontWeight: 800, fontSize: 40, lineHeight: 1.2, color: '#fff', textAlign: 'center',
+        background: 'rgba(20,20,20,.55)', padding: '12px 22px', borderRadius: 22, maxWidth: '100%', overflowWrap: 'anywhere'}}>
+        {n > 0 ? <><span style={{color: '#ffd166'}}>{n}/{total}</span>&nbsp;&nbsp;</> : null}{text}</div></div>;
+  }
   return <>
     <div style={{position: 'absolute', right: SAFE, top: SAFE, transform: `scale(${k})`, transformOrigin: '100% 0',
       fontFamily: FONT, fontWeight: 900, fontSize: 40, color: '#1d1d1d', background: '#ffd166', padding: '10px 22px',
@@ -69,11 +77,11 @@ function StepCard({n, total, text}) {
   </>;
 }
 
-function Hook({title, img}) {
+function Hook({title, img, dur}) {
   const f = useCurrentFrame(); const {fps} = useVideoConfig();
   const k = spring({frame: f, fps, config: {damping: 12}});
   return <AbsoluteFill>
-    <KenBurns src={img} dur={HOOK} variant={1} />
+    <KenBurns src={img} dur={dur} variant={1} zoom={0.04} />
     <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 45%)'}} />
     <div style={{position: 'absolute', left: SAFE, right: SAFE, top: 200, transform: `scale(${.7 + .3 * k})`, opacity: k,
       fontFamily: FONT, fontWeight: 900, fontSize: 74, lineHeight: 1.15, color: '#fff', textAlign: 'center',
@@ -82,10 +90,10 @@ function Hook({title, img}) {
   </AbsoluteFill>;
 }
 
-function EndCard({img, materials, hasLinks}) {
+function EndCard({img, materials, hasLinks, dur}) {
   const f = useCurrentFrame();
   return <AbsoluteFill>
-    <KenBurns src={img} dur={END} blur={18} />
+    <KenBurns src={img} dur={dur} blur={18} />
     <div style={{position: 'absolute', left: SAFE, right: SAFE, top: 220, fontFamily: FONT, color: '#fff'}}>
       <div style={{fontWeight: 900, fontSize: 62, marginBottom: 26}}>Bạn cần chuẩn bị:</div>
       {materials.slice(0, 8).map((m, i) => <div key={i} style={{fontWeight: 700, fontSize: 40, lineHeight: 1.35,
@@ -99,27 +107,32 @@ function EndCard({img, materials, hasLinks}) {
 
 function Fade({children, T}) {
   const f = useCurrentFrame();
-  return <AbsoluteFill style={{opacity: interpolate(f, [0, T], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})}}>{children}</AbsoluteFill>;
+  const o = T > 0 ? interpolate(f, [0, T], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}) : 1;
+  return <AbsoluteFill style={{opacity: o}}>{children}</AbsoluteFill>;
 }
 
 export function DiyVideo({guide}) {
-  const n = guide.steps.length, S = stepFrames(n), total = totalFrames(n);
+  const n = guide.steps.length, t = timingOf(guide), total = totalFrames(guide), S = t.step, X = t.xfade;
+  const base = t.hook + t.mats;
   return <AbsoluteFill style={{background: '#000'}}>
-    <Sequence durationInFrames={HOOK}><Hook title={guide.title} img={guide.hook} /></Sequence>
-    {guide.steps.map((s, i) => <Sequence key={i} from={HOOK + i * S} durationInFrames={S + (i < n - 1 ? XFADE : 0)}>
-      <Fade T={XFADE}>
-        {s.clip ? <KeyClip clip={s.clip} still={s.image} dur={S} /> : <KenBurns src={s.image} dur={S + XFADE} variant={i} />}
-        <StepCard n={s.n} total={n} text={s.on_screen} />
+    <Sequence durationInFrames={t.hook + (t.mats ? X : 0)}><Fade T={0}><Hook title={guide.title} img={guide.hook} dur={t.hook} /></Fade></Sequence>
+    {t.mats > 0 && guide.mats ? <Sequence from={t.hook} durationInFrames={t.mats + X}><Fade T={X}>
+      <KenBurns src={guide.mats} dur={t.mats + X} variant={2} zoom={t.zoom} />
+      {guide.compact ? <StepCard n={0} total={n} text="Chuẩn bị" compact /> : null}</Fade></Sequence> : null}
+    {guide.steps.map((s, i) => <Sequence key={i} from={base + i * S} durationInFrames={S + (i < n - 1 ? X : 0)}>
+      <Fade T={X}>
+        {s.clip ? <KeyClip clip={s.clip} still={s.image} dur={S} /> : <KenBurns src={s.image} dur={S + X} variant={i} zoom={t.zoom} />}
+        <StepCard n={s.n} total={n} text={s.on_screen} compact={guide.compact} />
       </Fade>
     </Sequence>)}
-    <Sequence from={HOOK + n * S} durationInFrames={END}>
-      <EndCard img={guide.hook} materials={guide.materials} hasLinks={!!guide.hasLinks} /></Sequence>
+    <Sequence from={base + n * S} durationInFrames={t.end}>
+      <Fade T={X}><EndCard img={guide.hook} materials={guide.materials} hasLinks={!!guide.hasLinks} dur={t.end} /></Fade></Sequence>
     <Progress total={total} />
     <AiLabel />
     <Audio src={staticFile('audio/music.wav')} volume={(f) => interpolate(f, [0, 10, total - 20, total], [0, .35, .35, 0],
       {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />
     <Sfx at={0} name="sparkle" />
-    {guide.steps.map((_, i) => <Sfx key={i} at={HOOK + i * S} name={i % 2 ? 'whoosh' : 'pop'} />)}
-    <Sfx at={HOOK + n * S} name="ding" />
+    {guide.steps.map((_, i) => <Sfx key={i} at={base + i * S} name={i % 2 ? 'whoosh' : 'pop'} volume={guide.compact ? 0.25 : 0.5} />)}
+    <Sfx at={base + n * S} name="ding" />
   </AbsoluteFill>;
 }

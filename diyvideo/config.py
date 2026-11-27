@@ -19,7 +19,23 @@ EST_TEXT_USD = 0.02
 SCRIPT_MODEL = "gemini-3.5-flash-lite"
 IMAGE_MODEL = "gemini-nano-banana-2.1"
 VERIFY_MODEL = "gemini-3.5-flash"
-PROMPT_VERSIONS = {"script": "script_v1", "image": "image_v2", "verify": "verify_v2"}
+# Visual "looks". crossfade = eye-level close-up stills joined by crossfades (user reference video, 2026-11-27).
+LOOKS = {
+    "sm1": {"script": "script_v1", "image": "image_v2", "edit": "edit_lock_v1", "verify": "verify_v2",
+            "steps": (6, 10), "keys": (3, 4), "on_screen_max": 60, "image_size": "1K", "materials_frame": False},
+    "crossfade": {"script": "script_v2", "image": "image_v3", "edit": "edit_lock_v2", "verify": "verify_v3",
+                  "steps": (10, 14), "keys": (0, 0), "on_screen_max": 40, "image_size": "2K", "materials_frame": True},
+}
+LOOK = os.environ.get("DIY_LOOK", "crossfade")
+
+
+def look():
+    return LOOKS[LOOK]
+
+
+def prompt_versions():
+    lk = look()
+    return {"look": LOOK, "script": lk["script"], "image": lk["image"], "edit": lk["edit"], "verify": lk["verify"]}
 FETCH_MAX_BYTES = 2 * 1024 * 1024
 FETCH_TIMEOUT_S = 20
 SOURCE_MAX_CHARS = 20000

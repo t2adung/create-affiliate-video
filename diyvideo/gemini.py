@@ -46,12 +46,12 @@ def _parts(resp):
     return (c.get("content") or {}).get("parts") or [], c.get("finishReason")
 
 
-def _image_request(prompt, refs):
+def _image_request(prompt, refs, size="1K"):
     parts = [{"text": prompt}] + [{"inlineData": {"mimeType": "image/jpeg", "data": base64.b64encode(r).decode()}}
                                   for r in refs]
     return {"contents": [{"role": "user", "parts": parts}],
             "generationConfig": {"responseModalities": ["IMAGE"],
-                                 "imageConfig": {"aspectRatio": "9:16", "imageSize": "1K"}}}
+                                 "imageConfig": {"aspectRatio": "9:16", "imageSize": size}}}
 
 
 def _image_from(resp, label):
@@ -104,11 +104,11 @@ class GeminiImage:
     """tier="standard": synchronous. tier="batch": one single-request batch job per frame, persisted in the
     ledger so an unfinished job resumes on the next run (raises PendingBatch after `wait_s`)."""
 
-    def __init__(self, model, ledger=None, tier="batch", wait_s=600, poll_s=15):
-        self.model, self.ledger, self.tier, self.wait_s, self.poll_s = model, ledger, tier, wait_s, poll_s
+    def __init__(self, model, ledger=None, tier="batch", wait_s=600, poll_s=15, size="1K"):
+        self.model, self.ledger, self.tier, self.wait_s, self.poll_s, self.size = model, ledger, tier, wait_s, poll_s, size
 
     def generate(self, prompt, refs, label, job_key=None):
-        body = _image_request(prompt, refs)
+        body = _image_request(prompt, refs, self.size)
         if self.tier == "standard":
             resp = _call("POST", f"models/{self.model}:generateContent", body)
             return Result(value=_image_from(resp, label), model=self.model, usage=_usage(resp), tier="standard")

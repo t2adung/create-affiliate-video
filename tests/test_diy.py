@@ -3,6 +3,8 @@ import json, tempfile, unittest
 from pathlib import Path
 from diyvideo import config, framing, images, ingest, ledger, providers, script, styles
 
+config.LOOK = "sm1"  # legacy look keeps these tests stable; the crossfade look has its own tests below
+
 ROOT = Path(__file__).resolve().parents[1]
 GUIDES = ROOT / "fixtures" / "guides"
 

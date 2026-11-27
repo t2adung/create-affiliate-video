@@ -25,7 +25,7 @@ def build(guide_id, script, style, frames_dir, video, probe, frames_report, cost
                    "retried": sum(f["qa"]["attempts"] - 1 for f in frames), "flagged": len(frames_report["flagged"])},
         "framing": {"max_shift_px": max([f["qa"]["gate"].get("shift_px", 0) or 0 for f in frames] or [0])},
         "video": probe, "cost_vnd": round(cost_vnd), "ai_label": "0-3s",
-        "prompts": config.PROMPT_VERSIONS, "pricing_version": config.PRICING_VERSION,
+        "prompts": config.prompt_versions(), "pricing_version": config.PRICING_VERSION,
         "source": source, "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
     (out / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")

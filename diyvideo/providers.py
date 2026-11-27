@@ -24,19 +24,21 @@ class MockText:
             return Result(value=value, model=self.model, usage={"in": len(prompt) // 4, "text_out": 400})
         src = prompt.rsplit("<<<SOURCE", 1)[1].rsplit("SOURCE>>>", 1)[0]
         lines = [l.strip("- ").strip() for l in src.splitlines() if l.strip().startswith("- ")]
-        steps_src = [l for l in lines if len(l) > 25][:10] or lines[:6]
-        while len(steps_src) < 6:
+        from . import config
+        lk = config.look(); lo, hi = lk["steps"]
+        steps_src = [l for l in lines if len(l) > 25][:hi] or lines[:lo]
+        while len(steps_src) < lo:
             steps_src.append(f"Kiểm tra lại và hoàn thiện phần {len(steps_src) + 1}")
         n = len(steps_src)
-        keys = {2, 4, 6} if n >= 6 else {2, 3, 4}
-        steps = [{"n": i + 1, "on_screen": f"Bước {i + 1}: " + " ".join(s.split()[:6])[:48],
+        keys = set() if lk["keys"][1] == 0 else ({2, 4, 6} if n >= 6 else {2, 3, 4})
+        steps = [{"n": i + 1, "on_screen": (f"Bước {i + 1}: " + " ".join(s.split()[:6]))[:lk["on_screen_max"] - 2],
                   "detail": f"Thực hiện thao tác số {i + 1} thật cẩn thận rồi kiểm tra lại.",
                   "image_prompt": f"overhead scene after step {i + 1}", "required_objects": ["object"],
                   "key": (i + 1) in keys} for i, s in enumerate(steps_src)]
         title = next((l.strip() for l in src.splitlines() if l.strip()), "Hướng dẫn DIY")[:60]
         value = {"title": title, "summary": "Tóm tắt hướng dẫn DIY từng bước.",
                  "materials": [{"name": "Vật liệu chính", "qty": "1"}], "safety_notes": [],
-                 "scene": "objects centred on the surface", "steps": steps,
+                 "scene": "objects centred on the surface", "materials_scene": "flat lay of materials", "steps": steps,
                  "caption": "Làm theo từng bước nhé!\nNội dung có sử dụng hình ảnh AI", "hashtags": ["#diy", "#meovat"]}
         return Result(value=value, model=self.model, usage={"in": len(prompt) // 4, "text_out": 900})
 
@@ -98,4 +100,5 @@ def verdict_pass(v):
     return bool(v.get("hands_ok") and v.get("matches_step") and v.get("continuity_ok")
                 and v.get("required_objects_present") and not v.get("face_visible")
                 and not v.get("head_or_shoulders_visible") and not v.get("text_or_logo")
+                and not v.get("arms_dominant") and v.get("sharp", True) is not False
                 and "face_visible" in v and "hands_ok" in v)
