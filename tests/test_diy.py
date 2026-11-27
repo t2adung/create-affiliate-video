@@ -280,6 +280,9 @@ class Orchestrator(unittest.TestCase):
         self.go()
         b = self.store.rows_b()[0]
         self.assertEqual(b["status"], "needs_review"); self.assertIn("image_flagged", b["error"])
+        self.assertTrue(b.get("video_url"), "a review video is rendered with the flagged frame substituted")
+        used = Path(self.render.call_args_list[0].args[1])
+        self.assertEqual(used.name, "frames-render")
         for i in range(61):
             self.L.record(f"x{i}", "x", "m", 14900 / config.VND_PER_USD)
         d = self.store._load(); d["A"][3]["status"] = "new"; self.store._save(d)
@@ -372,6 +375,18 @@ class GoogleAdapters(unittest.TestCase):
     def test_missing_secrets(self):
         with self.assertRaises(self.g.GoogleError):
             self.g.Session(env={}).access_token()
+
+
+class SubstituteFlagged(unittest.TestCase):
+    def test_flagged_frames_never_rendered(self):
+        from diyvideo import run as runmod
+        d = Path(tempfile.mkdtemp()); src = d / "f"; src.mkdir()
+        for n in ("01", "02", "03", "04"):
+            (src / f"{n}.jpg").write_bytes(n.encode())
+        out = runmod.substitute_flagged(src, {"01.jpg", "03.jpg"}, d / "r")
+        self.assertEqual((out / "01.jpg").read_bytes(), b"02")  # leading flagged → next accepted
+        self.assertEqual((out / "03.jpg").read_bytes(), b"02")  # → previous accepted
+        self.assertEqual((out / "04.jpg").read_bytes(), b"04")
 
 
 class SubmitAndExit(unittest.TestCase):

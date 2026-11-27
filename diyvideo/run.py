@@ -58,16 +58,17 @@ def build(store, ledger, prov, gid, sc, style, src, out_root, work_root):
     try:
         fr = images.generate_frames(sc, style, gid, frames_dir, prov.image, prov.verifier, ledger, tier=prov.tier)
         if fr["flagged"]:
-            store.upsert_b(gid, status="needs_review", error=f"image_flagged: {', '.join(fr['flagged'])}",
-                           cost_vnd=round(ledger.spent_vnd(guide=gid)))
-            return None
+            # IDEA MVP-4: a flagged image never goes into the video unreviewed. Render with the last accepted
+            # frame in its place; the flagged attempts stay in frames/attempts for the user's review.
+            frames_dir = substitute_flagged(frames_dir, fr["flagged"], Path(work_root) / gid / "frames-render")
         script_hash = hashlib.sha256(json.dumps(sc, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:16]
         mp4 = Path(work_root) / gid / f"video-{script_hash}.mp4"
         probe = render.render(sc, frames_dir, mp4, workdir=Path(work_root) / gid / "render")
         out, report = package.build(gid, sc, style, frames_dir, mp4, probe, fr, ledger.spent_vnd(guide=gid),
                                     {"url": src.get("url"), "truncated": src.get("truncated")}, out_root)
         store.upsert_b(gid, status="needs_review", video_url=str(out / "video.mp4"), cost_vnd=report["cost_vnd"],
-                       script_hash=script_hash)
+                       script_hash=script_hash,
+                       error=(f"image_flagged: {', '.join(fr['flagged'])} (previous frame shown)" if fr["flagged"] else ""))
         return report
     except CostCapExceeded as e:
         store.upsert_b(gid, status="failed", error=f"cost_cap: {e}"[:200])
@@ -77,6 +78,23 @@ def build(store, ledger, prov, gid, sc, style, src, out_root, work_root):
         else:
             store.upsert_b(gid, status="failed", error=f"{e.__class__.__name__}: {e}"[:200])
     return None
+
+
+def substitute_flagged(frames_dir, flagged, dest):
+    import shutil
+    dest = Path(dest); dest.mkdir(parents=True, exist_ok=True)
+    names = sorted(p.name for p in Path(frames_dir).glob("*.jpg"))
+    ok = [n for n in names if n not in flagged]
+    if not ok:
+        raise RuntimeError("all frames flagged; nothing safe to render")
+    for n in names:
+        if n in flagged:
+            before = [o for o in ok if o < n]
+            src = before[-1] if before else ok[0]  # never copy a flagged image into the render set
+        else:
+            src = n
+        shutil.copy(Path(frames_dir) / src, dest / n)
+    return dest
 
 
 def process_regenerate(store, ledger, prov, out_root, work_root):
