@@ -4,11 +4,11 @@
 
 - Mode: INTERACTIVE
 - User language: Vietnamese
-- State: handed-off
+- State: awaiting-approval
 - Raw input reference and revision: RAW_IDEA.md revision 2 (2026-11-26), SHA-256 50e828fb0d4a04dad64ab959defcbd562f93819bdc1c39480fab152214ce9b2b (previous: commit 7e559a1, SHA-256 fc75d1c3…76cd)
-- Draft IDEA.md SHA-256: 6cc292ac50468275a5a5d054a962a2cda9e11c2f3e681b0d6ba116b7737f3371
-- Last completed action: user approved IDEA.md (digest verified), PLANS.md initialized, handed off to the orchestrator
-- Next action: follow PLANS.md (Research stage)
+- Draft IDEA.md SHA-256: 53d56e5f7aaa9fb4daf76f655aa4aad99baac5c38fba588332addffabf1091f6 (revision 2)
+- Last completed action: paid pilot + user feedback reopened scope (motion SM-1 with pure interpolation, style rotation, locked camera, AI label 3 s, cap 15,000 VND/video); IDEA.md revision 2 drafted
+- Next action: wait for explicit approval of revision 2 digest; then update PLANS.md and resume at Stage 4
 
 ## Clarifications and assumptions
 
@@ -56,6 +56,8 @@ Proposed in round 5: one Sheet row per guide (topic, title, steps, materials wit
 
 Round 5 answers (2026-11-26): (1) Sheet A holds links to DIY tip content; AI summarises, lists materials and writes detailed steps into Sheet B, clear and complete enough for image/video generation; (2) affiliate links left blank for now; (3) 20–30 s, as many detailed steps as possible, not sketchy; (4) photoreal top-down hands-only with AI label; (5) text + music for now (no voice); (6) budget agreed (≤10,000 VND/video, 1–2/day); (7) platforms TikTok, YouTube Shorts, Facebook Reels with review before posting agreed.
 
+Round 6 (2026-11-27) — feedback after paid pilot: colours fine but monotonous across videos; AI label smaller, fainter, first 3 s only ("a (nhỏ và mờ hơn 3s)"); wants smoother motion while keeping Remotion; camera framing locked between steps; chose "SM-1, nội suy thuần" (stop-motion in-betweens for 3–4 key steps rendered with pure optical-flow interpolation). Scope change → IDEA.md revision 2 with a higher cap, re-approval required.
+
 ## Research and decisions
 
 Sources checked 2026-11-26 (web search summaries; verify against live docs during the Research stage):
@@ -81,10 +83,12 @@ See the Vietnamese approval summary at the end of IDEA.md (draft digest above).
 
 ## Approval record
 
-- Decision: approved
-- Approver and evidence reference: repository owner (session user), Claude Code session https://claude.ai/code/session_01Sw1Ye7QBU59wV8h5hqYohk, exact words: "duyệt IDEA"
-- Approval timestamp: 2026-11-26 (UTC, after 08:14 UTC CI run on commit 7c0710a)
-- Approved IDEA.md SHA-256: 6cc292ac50468275a5a5d054a962a2cda9e11c2f3e681b0d6ba116b7737f3371
+- Decision: pending (revision 2)
+- Approver and evidence reference: pending
+- Approval timestamp: pending
+- Approved IDEA.md SHA-256: pending
+
+History (superseded): revision 1 approved 2026-11-26 by the repository owner, words "duyệt IDEA", SHA-256 6cc292ac50468275a5a5d054a962a2cda9e11c2f3e681b0d6ba116b7737f3371.
 
 ## Handoff
 

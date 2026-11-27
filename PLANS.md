@@ -132,6 +132,12 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
 - Next: user chooses the motion approach (A / B / C / stop-motion variants); then revise IDEA.md (style
   rotation, AI-label rule, framing gate, motion approach, cap) for re-approval.
 
+### 2026-11-27 — Scope reopened (IDEA revision 2)
+
+- User chose SM-1 with pure interpolation. IDEA.md revision 2 (SHA-256 53d56e5f…1091f6) drafted: style rotation,
+  locked camera + framing gate, key-step in-betweens + minterpolate, AI label 0–3 s, OAuth, cap 15,000 VND/video
+  and 900,000 VND/month. Planning/implementation paused until explicit re-approval (digest must match).
+
 ## Template baseline (legacy)
 
 The repository template's own reference plan (four synthetic examples, PyMuPDF, SQLite jobs, mock providers,
