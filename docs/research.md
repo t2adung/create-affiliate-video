@@ -177,3 +177,11 @@ Findings:
 - Per video with 9 steps: all transitions AI (8 × 3 s = 24 s at 720p) ≈ $1.68 ≈ 44,000 VND, plus images. Three
   key transitions only (9 s) ≈ $0.63 ≈ 16,400 VND + ≈6,000 VND images ≈ 22,000 VND. Both exceed the approved
   10,000 VND/video cap and AI video is an IDEA exclusion, so either option needs a revised and re-approved IDEA.
+- Paid test (approved 5,500 VND, 2026-11-27): one `gemini-omni-1.2-flash` first/last-frame clip, noel step
+  05 → 06, `response_format` `{type: video, aspect_ratio: 9:16, resolution: 720p, duration: 3s}`. Result:
+  720×1280, 24 fps, 3.03 s, with native audio; 28 s to generate; 17,376 video tokens; cost $0.216 = 5,629 VND.
+  Frames 0–28 show natural hand motion, but there is a hard cut at frame 28→29 because the two step images
+  have different camera framing. Mitigations: lock framing across the image chain (same crop, objects stay in
+  place), or animate each step image alone (single-image-to-video) instead of interpolating between steps.
+  Output is 720p, so 1080×1920 delivery needs ×1.5 upscaling (1080p costs $0.104/s).
+- Pilot spend total: 40,286 VND of the approved 50,000 VND.

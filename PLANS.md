@@ -115,6 +115,15 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
 - Next executable action: Stage 4 pipeline design incl. stronger verifier and scene-bible composition rules;
   collect the user's feedback on the pilot videos.
 
+### 2026-11-27 — User feedback on pilot + AI video test
+
+- Feedback: colours OK but every video has the same look (vary styles); AI label → smaller, fainter, first 3 s
+  only (changes IDEA MVP-5 "every frame" → needs IDEA revision); wants smoother AI transitions.
+- Omni interpolation test done (research R9): natural hand motion but a hard cut caused by framing mismatch;
+  5,629 VND. Pilot total 40,286 / 50,000 VND.
+- Next: user chooses A (Remotion, ≈6k), B (3 AI moments, ≈22k) or C (all AI, ≈50k); then revise IDEA.md
+  (style rotation, label rule, AI video scope and cap if B/C) and request re-approval.
+
 ## Template baseline (legacy)
 
 The repository template's own reference plan (four synthetic examples, PyMuPDF, SQLite jobs, mock providers,
