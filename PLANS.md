@@ -20,8 +20,8 @@ to Idea Discovery.
 | --- | --- | --- | --- | --- |
 | 1 | Idea | idea-builder, product-manager | IDEA.md approved, digest recorded | done (commit 7c0710a + approval) |
 | 2 | Research | ai-engineer, tool-architect, security-reviewer | [docs/research.md](docs/research.md) R1–R7 from official pages (done 2026-11-26); paid image-continuity pilot pending user approval + key | in progress |
-| 3 | Input/Output specification | data-engineer, tool-architect | `docs/specification.md` from the template: Sheet A/B schemas, report.json schema, error envelope, status machine, stable keys | next (no spend, can proceed) |
-| 4 | Pipeline design | tool-architect, automation-engineer, prompt-engineer | stage diagram, provider interfaces (mock + real), SQLite checkpoint schema, cost guard, prompt templates with versions | pending |
+| 3 | Input/Output specification | data-engineer, tool-architect | `docs/specification.md` from the template: Sheet A/B schemas, report.json schema, error envelope, status machine, stable keys | done (docs/specification.md) |
+| 4 | Pipeline design | tool-architect, automation-engineer, prompt-engineer | stage diagram, provider interfaces (mock + real), SQLite checkpoint schema, cost guard, prompt templates with versions | next |
 | 5 | Implementation | data-engineer, ai-engineer, remotion-developer, video-engineer, automation-engineer | Python package + Remotion DIY template + GitHub Actions workflow, mocks first | pending |
 | 6 | Testing | qa-engineer | unit + fixture tests for MVP-1…MVP-9 incl. negative controls, offline in CI | pending |
 | 7 | Output evaluation | content-quality-reviewer, qa-engineer | `docs/templates/evaluation.md` filled: Schema, Hallucination, Batch/recovery, Idempotency, Usage, Visuals, Video, Licensing, Security | pending |
@@ -84,6 +84,16 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
 - Next executable action: Stage 3 specification (no spend). In parallel ask the user for: Gemini API key via the
   secure credential form + approval of the ≤50,000 VND continuity pilot; Google OAuth client setup; TikTok and
   Meta developer apps.
+
+### 2026-11-27 — Pilot approval and specification
+
+- User approved the paid pilot (≤50,000 VND) and has a Gemini API key: "đồng ý, da co gemini api key".
+- The credential form only injects `Authorization: Bearer`; native Gemini endpoints (Batch, image editing) need
+  `x-goog-api-key`, so the user must add the key as a network secret for `generativelanguage.googleapis.com`
+  with header `x-goog-api-key` in the environment settings (pending).
+- Stage 3 artifact: docs/specification.md (Sheet A/B schemas, state machine, Drive package, video spec,
+  stage interfaces, recovery and idempotency, fixtures, cost guard, credentials).
+- Next executable action: Stage 4 pipeline design + mock implementation skeleton; run the pilot once the key works.
 
 ## Template baseline (legacy)
 
