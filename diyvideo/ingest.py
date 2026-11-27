@@ -46,7 +46,7 @@ def truncate(text):
     if len(text) <= config.SOURCE_MAX_CHARS:
         return text, False
     cut = text.rfind("\n", 0, config.SOURCE_MAX_CHARS)
-    return text[: cut if cut > 0 else config.SOURCE_MAX_CHARS], True
+    return text[: cut if cut > 0 else config.SOURCE_MAX_CHARS].rstrip(), True
 
 
 def check_url(url, resolve=socket.getaddrinfo):

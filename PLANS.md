@@ -21,8 +21,8 @@ to Idea Discovery.
 | 1 | Idea | idea-builder, product-manager | IDEA.md approved, digest recorded | done (commit 7c0710a + approval) |
 | 2 | Research | ai-engineer, tool-architect, security-reviewer | [docs/research.md](docs/research.md) R1–R7 from official pages (done 2026-11-26); paid image-continuity pilot pending user approval + key | in progress |
 | 3 | Input/Output specification | data-engineer, tool-architect | `docs/specification.md` from the template: Sheet A/B schemas, report.json schema, error envelope, status machine, stable keys | done (docs/specification.md) |
-| 4 | Pipeline design | tool-architect, automation-engineer, prompt-engineer | docs/pipeline.md: stages, provider interfaces (mock + real), SQLite schema, cost guard, framing gate, style library, keyframes, prompt versions | next |
-| 5 | Implementation | data-engineer, ai-engineer, remotion-developer, video-engineer, automation-engineer | Python package + Remotion DIY template + GitHub Actions workflow, mocks first | pending |
+| 4 | Pipeline design | tool-architect, automation-engineer, prompt-engineer | [docs/pipeline.md](docs/pipeline.md) | done |
+| 5 | Implementation | data-engineer, ai-engineer, remotion-developer, video-engineer, automation-engineer | `diyvideo/` package + Remotion DIY template + GitHub Actions workflow, mocks first | in progress (slice 1 done) |
 | 6 | Testing | qa-engineer | unit + fixture tests for MVP-1…MVP-9 incl. negative controls, offline in CI | pending |
 | 7 | Output evaluation | content-quality-reviewer, qa-engineer | `docs/templates/evaluation.md` filled: Schema, Hallucination, Batch/recovery, Idempotency, Usage, Visuals, Video, Licensing, Security | pending |
 | 8 | Fix / Retest | qa-engineer | failed gates rerun with regressions | pending |
@@ -150,6 +150,17 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
   mode is phase 2. Cap 15,000 VND/video, 900,000 VND/month.
 - Next executable action: Stage 4 design doc, then mock-first implementation of ingest → script → images
   (chain + keyframes + framing gate + verifier) → render → package, with tests.
+
+### 2026-11-27 — Stage 4 done, implementation slice 1
+
+- docs/pipeline.md written. `diyvideo/`: config, ledger (cost guard, results, publish records), ingest (URL
+  rules, SSRF guard, limits), styles (9 looks), script (schema, copy check, URL ban, delimiter neutralising),
+  providers (mocks), framing gate, image chain (key-step in-betweens, gate → verifier, ≤2 retries, flag).
+- Bugs found by tests and fixed: drift cascade after a flagged frame (chain now continues from the last
+  accepted frame); source text could close the SOURCE block (delimiters neutralised); truncation whitespace.
+- Commands: `python3 -m unittest tests.test_diy` → 17 OK; `python3 -m unittest discover -s tests` → 27 OK.
+- Next: Gemini adapters (Interactions API, batch), render (Remotion DIY template in repo, minterpolate key-step
+  clips, final encode + probes), package/report, LocalSheetStore + CLI, then Google Sheets/Drive adapters.
 
 ## Template baseline (legacy)
 

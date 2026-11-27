@@ -44,6 +44,8 @@ def validate(j, source):
     if not 3 <= len(keys) <= 4 or 1 in keys: errs.append(f"key steps {keys} (need 3-4, not step 1)")
     visible = " ".join([j["title"], j["summary"], j["caption"]] + [s["on_screen"] + " " + s["detail"] for s in steps])
     if copied_span(source, visible): errs.append("copies >=12 consecutive words from the source")
+    if re.search(r"https?://|www\.|\b[\w-]+\.(com|net|vn|org|io|ly)\b", visible + " " + " ".join(j["hashtags"]), re.I):
+        errs.append("contains a URL or domain (links are never generated)")
     if errs:
         raise ScriptError("; ".join(errs))
     return j
@@ -51,7 +53,9 @@ def validate(j, source):
 
 def make_script(source_text, notes, text_model, ledger, guide_id, attempts=3):
     tpl = prompts.load(config.PROMPT_VERSIONS["script"])
-    prompt = prompts.fill(tpl, ai_line=config.AI_CAPTION_LINE, notes=(notes or "")[:300], source=source_text)
+    safe = re.sub(r"<<<\s*SOURCE|SOURCE\s*>>>", "[delimiter removed]", source_text, flags=re.I)
+    safe_notes = re.sub(r"<<<\s*SOURCE|SOURCE\s*>>>", "", (notes or "")[:300], flags=re.I)
+    prompt = prompts.fill(tpl, ai_line=config.AI_CAPTION_LINE, notes=safe_notes, source=safe)
     last = None
     for a in range(attempts):
         ledger.guard(guide_id, config.EST_TEXT_USD)

@@ -32,6 +32,7 @@ def frame_prompt(script, style, f, attempt, progress):
 
 
 def generate_frames(script, style, guide_id, out_dir, image_model, verifier, ledger, max_retries=2, tier="batch"):
+    """Frames chain from the last frame that passed the framing gate; flagged frames are kept for review."""
     out_dir = Path(out_dir); out_dir.mkdir(parents=True, exist_ok=True)
     from .script import frame_plan
     plan = frame_plan(script)
@@ -67,9 +68,11 @@ def generate_frames(script, style, guide_id, out_dir, image_model, verifier, led
             (out_dir / name).write_bytes(img)
             if rec["pass"]:
                 ledger.put(f"img:{base_key}", rec)
+        frames.append({**f, "file": name, "qa": rec})
         if not rec["pass"]:
             flags.append(name)
-        frames.append({**f, "file": name, "qa": rec})
+            if rec.get("verify") is None:  # failed the framing gate: never chain from a drifted frame
+                continue
         first = first or img
         prev = img
     return {"frames": frames, "flagged": flags}
