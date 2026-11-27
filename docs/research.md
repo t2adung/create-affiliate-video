@@ -219,3 +219,24 @@ Decision for the pipeline:
     smooth motion with mild ghosting on the ribbon. Interpolation does work when frames are locked and
     the changes are small (unlike R9).
 - Pilot spend total: 47,735 VND of the approved 50,000 VND (6 images in this test, 7,449 VND).
+
+## R11. First live end-to-end run of the pipeline (2026-11-27, approved test cap 20,000 VND)
+
+Command: `python -m diyvideo run --provider gemini --tier batch` on the synthetic Tết vase guide (source_text).
+
+- Result: 8 steps, key steps 3/4/5/7, 16 frames, 0 flagged. Video 1080×1920 H.264/AAC, 30 fps, 29.0 s,
+  19.7 MB, peak −8.5 dBFS, full decode OK. Style `tet-lacquer-red`. Max framing drift 0.96 px (auto-corrected).
+- Batch latency: about 2.3–2.5 min per frame (submit → succeeded), so 16 frames take ≈40 min end to end.
+- Verifier v1 rejected every top-down frame on `body_above_wrists_visible` (forearms and sleeves are always
+  visible). Root cause was confirmed with a diagnostic call. Fix: verifier v2 fails only on face, head, neck
+  or shoulders; image prompt v2 is consistent with it. After the fix, 2 of 16 frames needed one retry
+  (`matches_step`).
+- Cost: 15,939 VND total. This includes 2,667 VND spent before the verifier fix (3 rejected attempts of
+  frame 1) and one orphan batch that was cancelled before billing completed. A clean run is ≈13,200 VND
+  (images ≈ 545–690 VND each, growing with reference inputs; verifier ≈ 156–220 VND per frame; script
+  ≈ 220 VND). This is above IDEA's 9,500–12,000 estimate and within the 15,000 cap, with little headroom.
+- Visual review: consistent hands, sleeves, tray and light. The peach branch is thin and visually weak
+  compared with the source's "tallest point". The prompt should emphasise main-object scale.
+- Follow-ups: cut cost (verify only key and last frames, or verify every 2nd frame; drop the anchor image
+  after step 3); log the retry count across attempts in report.json (it currently counts only the final
+  pass); emphasise the main object in the scene prompt.

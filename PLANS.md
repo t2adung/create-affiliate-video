@@ -183,6 +183,14 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
 - Next: Google Sheets/Drive/YouTube OAuth adapters, publishing (YouTube, TikTok inbox, Facebook Page) with
   idempotency, scheduled GitHub Actions workflow, then a live approved test (batch latency + quality).
 
+### 2026-11-27 — First live end-to-end run (R11)
+
+- Live run passed: 16 frames, 0 flagged, video passes MVP-5 probes; batch ≈2.4 min/frame. Spend 15,939 VND
+  under the approved 20,000 test cap (clean-run estimate ≈13,200 VND). Verifier v1 over-strict → v2 fixed.
+- CI green on 11f1c28 (concurrency fix for 2-core runners).
+- Next: cost optimisation to restore headroom under 15,000 VND; user feedback on the video; Google OAuth
+  setup with the user; scheduled workflow (2 runs/day) after the repo becomes public; publishing adapters.
+
 ## Template baseline (legacy)
 
 The repository template's own reference plan (four synthetic examples, PyMuPDF, SQLite jobs, mock providers,
