@@ -40,7 +40,8 @@ def generate_frames(script, style, guide_id, out_dir, image_model, verifier, led
     for idx, f in enumerate(plan, 1):
         name = f"{f['step']:02d}.jpg" if f["last"] else f"{f['step']:02d}-k{f['k']}.jpg"
         s = script["steps"][f["step"] - 1]
-        base_key = sha(guide_id, name, json.dumps(s, sort_keys=True, ensure_ascii=False), style["id"],
+        visual = {k: s.get(k) for k in ("n", "image_prompt", "required_objects", "key")}  # text edits don't re-bill
+        base_key = sha(guide_id, name, json.dumps(visual, sort_keys=True, ensure_ascii=False), script["scene"], style["id"],
                        config.IMAGE_MODEL, config.PROMPT_VERSIONS["image"], sha(prev or b""))
         cached = ledger.get(f"img:{base_key}")
         if cached and (out_dir / name).exists():
@@ -50,8 +51,9 @@ def generate_frames(script, style, guide_id, out_dir, image_model, verifier, led
             for attempt in range(max_retries + 1):
                 ledger.guard(guide_id, config.EST_FRAME_USD[tier] + 0.003)
                 refs = [] if prev is None else ([prev] if first is prev else [first, prev])
-                r = image_model.generate(frame_prompt(script, style, f, attempt, idx), refs, f"{name}:{attempt}")
-                ledger.record(guide_id, f"img:{name}:{attempt}", r.model, config.usd_from_usage(r.model, r.usage, tier))
+                r = image_model.generate(frame_prompt(script, style, f, attempt, idx), refs, f"{name}:{attempt}",
+                                         **({"job_key": f"{guide_id}:{base_key}:{attempt}"} if getattr(image_model, "tier", None) == "batch" else {}))
+                ledger.record(guide_id, f"img:{name}:{attempt}", r.model, config.usd_from_usage(r.model, r.usage, r.tier))
                 img = r.value
                 gate = framing.measure(prev, img) if prev is not None else {"pass": True, "reason": "first"}
                 if not gate["pass"]:

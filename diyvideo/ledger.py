@@ -17,6 +17,7 @@ class Ledger:
             self.db.execute("CREATE TABLE IF NOT EXISTS results (key TEXT PRIMARY KEY, value TEXT NOT NULL, ts REAL)")
             self.db.execute("CREATE TABLE IF NOT EXISTS costs (id INTEGER PRIMARY KEY, guide TEXT, label TEXT,"
                             " model TEXT, usd REAL, month TEXT, ts REAL)")
+            self.db.execute("CREATE TABLE IF NOT EXISTS batches (key TEXT PRIMARY KEY, job TEXT, ts REAL)")
             self.db.execute("CREATE TABLE IF NOT EXISTS publish (guide TEXT, platform TEXT, state TEXT, url TEXT,"
                             " PRIMARY KEY (guide, platform))")
 
@@ -29,6 +30,18 @@ class Ledger:
         with self.db:
             self.db.execute("INSERT OR REPLACE INTO results VALUES (?, ?, ?)",
                             (key, json.dumps(value, ensure_ascii=False, sort_keys=True), time.time()))
+
+    # pending batch jobs (resumable across runs) ----------------------------
+    def batch_job(self, key):
+        row = self.db.execute("SELECT job FROM batches WHERE key = ?", (key,)).fetchone()
+        return row[0] if row else None
+
+    def set_batch_job(self, key, job):
+        with self.db:
+            if job is None:
+                self.db.execute("DELETE FROM batches WHERE key = ?", (key,))
+            else:
+                self.db.execute("INSERT OR REPLACE INTO batches VALUES (?, ?, ?)", (key, job, time.time()))
 
     # costs -------------------------------------------------------------
     @staticmethod

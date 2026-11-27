@@ -22,7 +22,7 @@ class MockText:
         if self.override is not None:
             value = self.override(prompt, self.calls) if callable(self.override) else self.override
             return Result(value=value, model=self.model, usage={"in": len(prompt) // 4, "text_out": 400})
-        src = prompt.split("<<<SOURCE", 1)[1].rsplit("SOURCE>>>", 1)[0]
+        src = prompt.rsplit("<<<SOURCE", 1)[1].rsplit("SOURCE>>>", 1)[0]
         lines = [l.strip("- ").strip() for l in src.splitlines() if l.strip().startswith("- ")]
         steps_src = [l for l in lines if len(l) > 25][:10] or lines[:6]
         while len(steps_src) < 6:
@@ -33,7 +33,7 @@ class MockText:
                   "detail": f"Thực hiện thao tác số {i + 1} thật cẩn thận rồi kiểm tra lại.",
                   "image_prompt": f"overhead scene after step {i + 1}", "required_objects": ["object"],
                   "key": (i + 1) in keys} for i, s in enumerate(steps_src)]
-        title = next((l for l in src.splitlines() if l.strip()), "Hướng dẫn DIY")[:60]
+        title = next((l.strip() for l in src.splitlines() if l.strip()), "Hướng dẫn DIY")[:60]
         value = {"title": title, "summary": "Tóm tắt hướng dẫn DIY từng bước.",
                  "materials": [{"name": "Vật liệu chính", "qty": "1"}], "safety_notes": [],
                  "scene": "objects centred on the surface", "steps": steps,
@@ -60,7 +60,7 @@ class MockImage:
             cv2.circle(bg, (x, y), int(rng.integers(3, 9)), (60, 80, 110), -1)
         return bg
 
-    def generate(self, prompt, refs, label):
+    def generate(self, prompt, refs, label, job_key=None):
         self.calls.append(label)
         m = re.search(r"progress=(\d+)", prompt)
         progress = int(m.group(1)) if m else len(self.calls)

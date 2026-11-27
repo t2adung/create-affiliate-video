@@ -187,3 +187,100 @@ class CostGuard(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Orchestrator(unittest.TestCase):
+    """MVP-1/6/8/9 behaviour of the run loop, with the renderer faked (the real render is covered by RenderGate)."""
+
+    def setUp(self):
+        from unittest import mock
+        from diyvideo import run as runmod, sheets
+        self.runmod, self.sheets, self.mock = runmod, sheets, mock
+        self.d = Path(tempfile.mkdtemp())
+        self.store = sheets.LocalSheetStore(self.d / "sheet.json")
+        d = self.store._load()
+        d["A"] = [{"source_text": page("noel-ribbon.html"), "topic": "noel"},
+                  {"source_url": "https://www.youtube.com/watch?v=x", "topic": "noel"},
+                  {"source_text": page("tet-flower-vase.html"), "topic": "tet"},
+                  {"source_text": page("kitchen-stove-clean.html"), "topic": "don-dep"}]
+        self.store._save(d)
+        self.L = ledger.Ledger(str(self.d / "s.db"))
+        self.img = providers.MockImage()
+        self.prov = runmod.Providers(providers.MockText(), self.img, providers.MockVerifier(), "batch")
+        probe = {"duration_s": 30.0, "width": 1080, "height": 1920}
+
+        def fake_render(sc, frames_dir, out, workdir=None):
+            Path(out).parent.mkdir(parents=True, exist_ok=True); Path(out).write_bytes(b"mp4"); return probe
+        self.patch = mock.patch("diyvideo.render.render", side_effect=fake_render)
+        self.render = self.patch.start()
+        self.addCleanup(self.patch.stop)
+
+    def go(self):
+        return self.runmod.run(self.store, self.L, self.prov, self.d / "out", self.d / "work")
+
+    def test_batches_errors_and_resume(self):
+        self.assertEqual(self.go(), 2)
+        a = self.store.rows_a()
+        self.assertEqual([r.get("status", "new") for r in a], ["scripted", "error: unsupported_source", "scripted", "new"])
+        b = self.store.rows_b()
+        self.assertEqual([r["status"] for r in b], ["needs_review", "needs_review"])
+        self.assertNotEqual(b[0]["style_id"], b[1]["style_id"])
+        out = self.d / "out" / b[0]["guide_id"]
+        for f in ("video.mp4", "cover.jpg", "caption.txt", "report.json"):
+            self.assertTrue((out / f).exists(), f)
+        self.assertTrue(list((out / "steps").glob("*.jpg")))
+        rep = json.loads((out / "report.json").read_text())
+        self.assertEqual(rep["ai_label"], "0-3s"); self.assertIn("style_id", rep)
+        self.assertEqual(self.go(), 1)  # the remaining row
+        self.assertEqual(self.go(), 0)
+
+    def test_regenerate_rerenders_without_new_images(self):
+        self.go()
+        gid = self.store.rows_b()[0]["guide_id"]
+        d = self.store._load(); d["A"][3]["status"] = "skip"; self.store._save(d)  # no new rows this time
+        calls = len(self.img.calls)
+        steps = self.store.rows_b()[0]["steps"].splitlines()
+        steps[0] = "1 | Chữ mới do người dùng sửa | chi tiết mới"
+        self.store.upsert_b(gid, steps="\n".join(steps), status="regenerate")
+        self.render.reset_mock()
+        self.go()
+        self.assertEqual(len(self.img.calls), calls, "text-only edits must not regenerate (re-bill) images")
+        sc_used = self.render.call_args_list[0].args[0]
+        self.assertEqual(sc_used["steps"][0]["on_screen"], "Chữ mới do người dùng sửa")
+        self.assertEqual(self.store.rows_b()[0]["status"], "needs_review")
+
+    def test_flagged_and_cost_cap(self):
+        self.prov.verifier = providers.MockVerifier(script={f"01.jpg:{a}": {"face_visible": True} for a in range(3)})
+        self.go()
+        b = self.store.rows_b()[0]
+        self.assertEqual(b["status"], "needs_review"); self.assertIn("image_flagged", b["error"])
+        for i in range(61):
+            self.L.record(f"x{i}", "x", "m", 14900 / config.VND_PER_USD)
+        d = self.store._load(); d["A"][3]["status"] = "new"; self.store._save(d)
+        self.go()
+        self.assertTrue(self.store.rows_a()[3]["status"].startswith("error: cost_cap"))
+
+
+@unittest.skipUnless(__import__("os").environ.get("DIY_RENDER") == "1", "set DIY_RENDER=1 to run the real render gate")
+class RenderGate(unittest.TestCase):
+    """MVP-5 on a mock guide: real Remotion + FFmpeg render, probes, AI label timing."""
+
+    def test_render_and_label(self):
+        from diyvideo import render
+        d = Path(tempfile.mkdtemp()); L = ledger.Ledger(str(d / "s.db"))
+        sc = script.make_script(page("kitchen-stove-clean.html"), "", providers.MockText(), L, "g-r")
+        sc["steps"] = sc["steps"][:6]; [s.update(key=s["n"] in (2, 4, 5)) for s in sc["steps"]]
+        images.generate_frames(sc, styles.pick("don-dep"), "g-r", d / "f", providers.MockImage(w=768, h=1376),
+                               providers.MockVerifier(), L)
+        p = render.render(sc, d / "f", d / "v.mp4", workdir=d / "w")
+        self.assertEqual((p["width"], p["height"], p["fps"]), (1080, 1920, "30/1"))
+        self.assertAlmostEqual(p["duration_s"], render.total_seconds(6), places=1)
+        self.assertLessEqual(p["peak_dbfs"], -1.0)
+        import subprocess, cv2
+        crops = []
+        for t in (1.5, 4.0):
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(t), "-i", str(d / "v.mp4"), "-frames:v", "1",
+                            str(d / f"{t}.png")], check=True)
+            crops.append(cv2.imread(str(d / f"{t}.png"))[60:92, 60:330].astype(int))
+        diff = abs(crops[0] - crops[1]).mean()
+        self.assertGreater(diff, 5, "AI label should be visible at 1.5 s and gone at 4 s")

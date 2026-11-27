@@ -22,7 +22,7 @@ to Idea Discovery.
 | 2 | Research | ai-engineer, tool-architect, security-reviewer | [docs/research.md](docs/research.md) R1–R7 from official pages (done 2026-11-26); paid image-continuity pilot pending user approval + key | in progress |
 | 3 | Input/Output specification | data-engineer, tool-architect | `docs/specification.md` from the template: Sheet A/B schemas, report.json schema, error envelope, status machine, stable keys | done (docs/specification.md) |
 | 4 | Pipeline design | tool-architect, automation-engineer, prompt-engineer | [docs/pipeline.md](docs/pipeline.md) | done |
-| 5 | Implementation | data-engineer, ai-engineer, remotion-developer, video-engineer, automation-engineer | `diyvideo/` package + Remotion DIY template + GitHub Actions workflow, mocks first | in progress (slice 1 done) |
+| 5 | Implementation | data-engineer, ai-engineer, remotion-developer, video-engineer, automation-engineer | `diyvideo/` package + Remotion DIY template + GitHub Actions workflow, mocks first | in progress (slices 1–2 done) |
 | 6 | Testing | qa-engineer | unit + fixture tests for MVP-1…MVP-9 incl. negative controls, offline in CI | pending |
 | 7 | Output evaluation | content-quality-reviewer, qa-engineer | `docs/templates/evaluation.md` filled: Schema, Hallucination, Batch/recovery, Idempotency, Usage, Visuals, Video, Licensing, Security | pending |
 | 8 | Fix / Retest | qa-engineer | failed gates rerun with regressions | pending |
@@ -161,6 +161,22 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
 - Commands: `python3 -m unittest tests.test_diy` → 17 OK; `python3 -m unittest discover -s tests` → 27 OK.
 - Next: Gemini adapters (Interactions API, batch), render (Remotion DIY template in repo, minterpolate key-step
   clips, final encode + probes), package/report, LocalSheetStore + CLI, then Google Sheets/Drive adapters.
+
+### 2026-11-27 — Implementation slice 2
+
+- Added: gemini.py (generateContent + resumable batchGenerateContent, PendingBatch, key from env or proxy,
+  redacted errors), render.py + diyvideo/remotion (hook, steps, key-step minterpolate clips, end card, AI label
+  0–3 s, original audio), package.py (output folder + report.json), sheets.py (LocalSheetStore), run.py
+  (≤2 new guides/run, regenerate path, flag/cost-cap/pending handling), CLI `python -m diyvideo run`
+  (paid provider refused unless DIY_ALLOW_SPEND=1).
+- Fix: image cache keys use only visual fields, so text edits re-render without re-billing (tested).
+- Research: no Flex tier for the image model; Batch is required to stay under the 15,000 VND cap (standard ≈
+  17–21k for 16–20 frames). Batch latency is unmeasured → needs a small approved live test.
+- Commands: `python3 -m unittest discover -s tests` → 31 OK (1 skipped); `DIY_RENDER=1 python3 -m unittest
+  tests.test_diy.RenderGate` → OK in 242 s (1080×1920, 30 fps, exact duration, peak ≤ −1 dBFS, label 0–3 s).
+- CI: installs requirements-diy.txt, `npm ci --prefix diyvideo/remotion`, DIY_RENDER=1, timeout 30 min.
+- Next: Google Sheets/Drive/YouTube OAuth adapters, publishing (YouTube, TikTok inbox, Facebook Page) with
+  idempotency, scheduled GitHub Actions workflow, then a live approved test (batch latency + quality).
 
 ## Template baseline (legacy)
 
