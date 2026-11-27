@@ -138,6 +138,12 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
   locked camera + framing gate, key-step in-betweens + minterpolate, AI label 0–3 s, OAuth, cap 15,000 VND/video
   and 900,000 VND/month. Planning/implementation paused until explicit re-approval (digest must match).
 
+### 2026-11-27 — IDEA revisions 3–4
+
+- Rev 3 added self-filmed mode; user then deferred it to phase 2. Rev 4 (MVP = AI mode only, 15,000 VND/video,
+  900,000 VND/month) awaits explicit approval. Phase-2 hooks to keep in design: Sheet `mode` column, shared
+  Remotion template, Drive clip folder convention.
+
 ## Template baseline (legacy)
 
 The repository template's own reference plan (four synthetic examples, PyMuPDF, SQLite jobs, mock providers,

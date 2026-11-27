@@ -1,6 +1,6 @@
 # IDEA
 
-Máy tạo video DIY hướng dẫn từng bước (giấu mặt) từ Google Sheet. [Raw idea](RAW_IDEA.md) (bản cập nhật 2). [Hồ sơ trao đổi](IDEA_REVIEW.md). Bản sửa đổi 3 (27/11/2026: thêm chế độ tự quay), chờ người dùng duyệt lại. Bản 1 đã duyệt có SHA-256 `6cc292ac…f3371`.
+Máy tạo video DIY hướng dẫn từng bước (giấu mặt) từ Google Sheet. [Raw idea](RAW_IDEA.md) (bản cập nhật 2). [Hồ sơ trao đổi](IDEA_REVIEW.md). Bản sửa đổi 4 (27/11/2026: MVP chỉ làm chế độ ảnh AI, chế độ tự quay để giai đoạn sau), chờ người dùng duyệt lại. Bản 1 đã duyệt có SHA-256 `6cc292ac…f3371`.
 
 ## Problem and target users
 
@@ -12,7 +12,6 @@ Người xem là người Việt dùng TikTok, YouTube Shorts và Facebook Reels
 
 - Người dùng chỉ cần dán link bài hướng dẫn vào Sheet A. Hệ thống tự tóm tắt, thống kê vật liệu, chia thành 6–10 bước rõ ràng và ghi vào Sheet B.
 - Từ Sheet B, hệ thống tạo ảnh từng bước như thật: chụp từ trên xuống, chỉ thấy tay, **camera khóa cứng** nên các bước nối tiếp nhau liền mạch. Ở 3–4 bước then chốt, AI tạo thêm các khung trung gian để thấy rõ thao tác tay; máy nội suy các khung đó thành chuyển động mượt. Sau đó ghép bằng hiệu ứng, chữ và nhạc thành video 20–30 giây. Video không phải kiểu slide ảnh đứng yên.
-- Chế độ **tự quay**: người dùng quay clip thật theo kịch bản quay do AI viết. Hệ thống tự cắt, chỉnh màu, tua nhanh, chuyển cảnh và dựng thành video cùng khuôn mẫu, không cần nhãn AI. Mỗi bài chọn chế độ `ai` hoặc `self` ngay trong Sheet.
 - Mỗi video có một phong cách hình ảnh riêng (mặt bàn, màu áo, ánh sáng, bảng màu) lấy từ bộ phong cách xoay vòng, để các video không đơn điệu.
 - Người dùng duyệt video trong Sheet B trước khi hệ thống đăng. Video có nhãn AI nhỏ, mờ trong 3 giây đầu; caption và cờ AI của nền tảng (nếu có) cũng khai báo nội dung AI.
 - Chi phí mỗi video ước tính khoảng 11.000đ, trần 15.000đ. Danh sách vật liệu có sẵn cột link affiliate để điền sau.
@@ -54,27 +53,28 @@ Hồ sơ bàn giao: MVP.
   
   Nền tảng nào chưa được cấp quyền API thì tạo gói đăng tay (video + caption + hashtag) và ghi rõ lý do. Khi đăng lỗi, hệ thống không đăng trùng.
 - MVP-8. Giới hạn chi phí: ước tính trước khi chạy và dừng trước khi vượt 15.000đ/video hoặc 900.000đ/tháng. Ghi chi phí từng video. Khóa API và token nằm trong GitHub Secrets, không xuất hiện trong log hay PR.
-- MVP-10. Chế độ tự quay (`mode=self`):
-  - Sheet B có thêm kịch bản quay cho từng bước: quay gì, thời lượng gợi ý, thêm clip `00-truoc` và `99-thanhpham`;
-  - người dùng tải clip vào thư mục Drive `clip/<guide_id>/`, đặt tên `NN.mp4` hoặc `NN.mov`;
-  - hệ thống kiểm tra từng clip: khổ dọc, ≥ 720p, độ sáng đủ, có đủ các bước. Lỗi được báo trên Sheet B theo từng clip;
-  - AI xem clip và chọn đoạn có thao tác đúng bước (gọi riêng, dữ liệu không tin cậy);
-  - hệ thống chỉnh màu theo bộ phong cách, chống rung nhẹ, tua nhanh đoạn lặp, cắt theo nhịp nhạc, và dựng bằng cùng khuôn video;
-  - nhãn AI chỉ xuất hiện khi video có hình do AI tạo;
-  - chi phí ≤ 2.000đ/video.
 - MVP-9. GitHub Actions chạy theo lịch và chạy thủ công được. Lần chạy bị ngắt giữa chừng thì chạy tiếp từ bước dở dang, không tạo lại ảnh đã đạt và không tính phí hai lần. Mỗi lần chạy xử lý tối đa 2 video mới.
 
 ## Exclusions
 
 - Giọng đọc AI. Video có người thật hoặc lộ mặt. Mascot.
 - AI tạo video (Gemini Omni và tương tự): chỉ dùng ảnh, khung trung gian và nội suy.
-- AI "vẽ lại" hoặc đổi phong cách clip tự quay. Che hay làm mờ mặt tự động: clip lộ mặt bị báo lỗi để quay lại.
+- Chế độ tự quay: để giai đoạn 2 (xem mục mở rộng).
 - Đọc nội dung từ link video (YouTube, TikTok), file PDF, hoặc trang yêu cầu đăng nhập. Với các nguồn này, người dùng dán nội dung chữ vào Sheet A.
 - Tự tìm hoặc tự tạo link affiliate. Gắn giỏ hàng TikTok Shop.
 - Nhạc thịnh hành của nền tảng: API không gắn được, người dùng tự thêm trong app nếu muốn.
 - Tự trả lời bình luận. Phân tích lượt xem.
 
 ## Future enhancements
+
+- **Giai đoạn 2, chế độ tự quay (`mode=self`)**, đã thống nhất ngày 27/11/2026:
+  - AI viết kịch bản quay;
+  - người dùng tải clip vào Drive `clip/<guide_id>/` (khổ dọc, ≥ 720p, tên `00-truoc`, `NN`, `99-thanhpham`);
+  - hệ thống kiểm tra clip, AI chọn đoạn có thao tác đúng bước;
+  - hệ thống chỉnh màu, chống rung nhẹ, tua nhanh, cắt theo nhịp và dựng bằng cùng khuôn mẫu;
+  - không cần nhãn AI, chi phí khoảng 300–2.000đ/video, khối lượng khoảng 3–5 ngày;
+  - không tự động che mặt: clip lộ mặt bị báo lỗi để quay lại;
+  - thiết kế cột Sheet và khuôn video ở giai đoạn 1 phải để chỗ cho chế độ này.
 
 - Giọng đọc tiếng Việt.
 - Điền link affiliate cho từng vật liệu và tự chèn vào caption, bình luận ghim hoặc trang link-in-bio.
@@ -96,7 +96,6 @@ Hồ sơ bàn giao: MVP.
 | `source_text` | Không bắt buộc, tối đa 20.000 ký tự. Dùng khi link không đọc được |
 | `topic` | Một trong: `noel`, `don-dep`, `meo-don-dep`, `tet`, `cam-hoa`, `khac` |
 | `notes` | Không bắt buộc, tối đa 300 ký tự |
-| `mode` | `ai` (mặc định) hoặc `self` (tự quay) |
 | `status` | Do hệ thống ghi: `new`, `scripted`, `error: <lý do>` |
 
 Ràng buộc:
@@ -113,11 +112,7 @@ Ví dụ giả lập: `source_url=https://example.com/cam-hoa-tet-5-buoc`, `topi
 - `image_prompts`: ẩn, câu lệnh tạo ảnh của từng bước bằng tiếng Anh;
 - `safety_notes`, `caption` (≤ 2.200 ký tự), `hashtags`;
 - `status`: `script_ready` → `rendering` → `needs_review` → `approved` hoặc `regenerate` hoặc `skip` → `published`, `export_only` hoặc `failed`;
-- `shot_list` (chỉ khi `mode=self`): mỗi dòng dạng `clip | quay gì | thời lượng gợi ý`;
-- `clip_status` (chỉ khi `mode=self`): trạng thái từng clip, ví dụ `01 ok`, `03 thiếu`, `05 tối quá`;
 - `video_url`, `cost_vnd`, `error`, `source_url`.
-
-**Clip tự quay** (người dùng tải lên Drive `clip/<guide_id>/`): MP4 hoặc MOV, khổ dọc, từ 720p trở lên, mỗi clip 2 giây – 3 phút và ≤ 500 MB, tên `00-truoc`, `01`…`NN`, `99-thanhpham`. Clip là dữ liệu riêng tư của người dùng, không đưa vào git, chỉ xử lý trong lần chạy.
 
 ## Output contract
 
@@ -170,7 +165,7 @@ Khi đăng thành công, Sheet B ghi link bài đăng của từng nền tảng.
 
 ## Complexity and operating costs
 
-**Độ phức tạp:** trung bình–cao, ước tính 2,5–3,5 tuần làm việc, trong đó chế độ tự quay chiếm khoảng 3–5 ngày. Phần khó nhất là giữ ảnh liền mạch kèm bước kiểm tra, xác thực OAuth với 3 nền tảng mạng xã hội, và giới hạn chi phí kèm chạy tiếp khi bị ngắt.
+**Độ phức tạp:** trung bình–cao, ước tính 2–3 tuần làm việc (chưa gồm chế độ tự quay của giai đoạn 2). Phần khó nhất là giữ ảnh liền mạch kèm bước kiểm tra, xác thực OAuth với 3 nền tảng mạng xã hội, và giới hạn chi phí kèm chạy tiếp khi bị ngắt.
 
 **Chi phí vận hành (VNĐ; quy đổi 26.000đ/USD; ước tính dựa trên giá đo được khi chạy thử):**
 
@@ -179,8 +174,7 @@ Khi đăng thành công, Sheet B ghi link bài đăng của từng nền tảng.
 | AI viết chữ + kiểm tra | khoảng 300–800đ |
 | Ảnh (khoảng 16–20 ảnh: 6–10 bước + 2–3 khung × 3–4 bước then chốt + ảnh tạo lại; khoảng 540đ/ảnh khi chạy theo lô, đo từ chạy thử) | khoảng 9.000–11.000đ |
 | Cổng khung hình, nội suy, dựng video | 0đ |
-| **Tổng (chế độ ảnh AI)** | **khoảng 9.500–12.000đ** |
-| Chế độ tự quay: AI xem clip để chọn đoạn (khoảng 300 token/giây clip) + viết kịch bản | khoảng 300–2.000đ |
+| **Tổng** | **khoảng 9.500–12.000đ** |
 
 - Google Sheets, Google Drive và API của các mạng xã hội: 0đ.
 - GitHub Actions: khoảng 5 phút/video, nằm trong hạn mức miễn phí 2.000 phút/tháng của repo riêng tư.
@@ -190,7 +184,7 @@ Khi đăng thành công, Sheet B ghi link bài đăng của từng nền tảng.
 ## Privacy, security, licensing and risks
 
 **Dữ liệu và bảo mật:**
-- Dữ liệu gồm link và bài hướng dẫn công khai. Clip tự quay có thể chứa hình người dùng hoặc nhà riêng: chỉ đọc từ Drive của người dùng, xử lý tạm trong lần chạy rồi xóa, không lưu vào git hay log.
+- Dữ liệu gồm link và bài hướng dẫn công khai, không có dữ liệu cá nhân.
 - Khóa API và token OAuth lưu trong GitHub Secrets. Không lưu ảnh hay video thật vào git. Tệp đầu ra nằm trên Drive của người dùng đến khi họ xóa.
 - Nội dung trang nguồn được tách khỏi câu lệnh hệ thống, chỉ trích đúng các trường theo khuôn đã định, và không truy cập địa chỉ nội bộ.
 
@@ -216,7 +210,7 @@ Khi đăng thành công, Sheet B ghi link bài đăng của từng nền tảng.
 - Ảnh như thật, chụp từ trên xuống, chỉ thấy tay, có gắn nhãn AI.
 - Tạm thời chỉ dùng chữ và nhạc.
 - 1–2 video/ngày; chọn phương án chuyển động SM-1 với nội suy thuần (27/11/2026).
-- Thêm chế độ tự quay; giữ trần 900.000đ/tháng (27/11/2026).
+- Giữ trần 900.000đ/tháng; chế độ tự quay để giai đoạn 2, ưu tiên chế độ ảnh AI (27/11/2026).
 - Tông màu cần đa dạng giữa các video.
 - Nhãn AI nhỏ, mờ, chỉ hiện 3 giây đầu.
 - Camera khóa cứng giữa các bước.
@@ -251,12 +245,6 @@ Kiểm thử tự động dùng 3 bài hướng dẫn giả lập (`fixtures/gui
 - MVP-6: thư mục Drive (bản giả lập) có đủ 5 loại tệp, và Sheet B có link cùng chi phí. Đặt trạng thái `regenerate` sau khi sửa chữ thì video mới phản ánh đúng chữ đã sửa.
 - MVP-7: video chưa `approved` thì không bao giờ được đăng. Với bản giả lập API, bài đăng gửi kèm cờ AI. Khi mất kết nối sau lúc tải lên, lần chạy lại không tạo bài trùng. Nền tảng chưa có quyền thì trạng thái là `export_only` kèm gói đăng tay.
 - MVP-8: một bài ước tính vượt 15.000đ bị dừng trước khi gọi API tạo ảnh. Tổng chi phí tháng chạm 900.000đ thì dừng toàn bộ lần chạy. Quét log và artifact không thấy khóa API hay token.
-- MVP-10: dùng bộ clip giả lập do FFmpeg tạo (8 bước, có đoạn thừa đầu và cuối):
-  - video ra đúng thứ tự bước, mỗi bước 2,5–3,5 giây, đạt mọi kiểm tra định dạng của MVP-5;
-  - đoạn được chọn nằm trong khoảng có thao tác đã đánh dấu sẵn ở ≥ 90% bước;
-  - clip ngang, clip quá tối, clip thiếu bước 03 và tên tệp sai đều báo đúng lỗi trên `clip_status` mà không dựng video;
-  - video tự quay không có nhãn AI;
-  - chi phí ghi nhận ≤ 2.000đ.
 - MVP-9: ngắt tiến trình sau ảnh thứ 3 rồi chạy lại thì không tạo lại 3 ảnh đã đạt và chi phí không tăng cho các ảnh đó. Một lần chạy có 5 dòng mới chỉ xử lý 2 dòng.
 
 ## Vietnamese approval summary
@@ -268,9 +256,9 @@ Kiểm thử tự động dùng 3 bài hướng dẫn giả lập (`fixtures/gui
 4. Hệ thống ghép thành video 20–30 giây có chữ và nhạc; nhãn AI nhỏ, mờ, hiện 3 giây đầu.
 5. Bạn duyệt trong Sheet rồi hệ thống đăng TikTok, YouTube Shorts và Facebook Reels.
 
-**Thay đổi so với bản đã duyệt:** thêm **chế độ tự quay** (AI viết kịch bản quay, hệ thống tự cắt, chỉnh màu và dựng; khoảng 300–2.000đ/video; không cần nhãn AI); chuyển động SM-1, bộ phong cách xoay vòng, camera khóa kèm cổng kiểm tra khung hình, nhãn AI chỉ 3 giây, đăng nhập Google bằng tài khoản của bạn (OAuth).
+**Thay đổi so với bản đã duyệt:** chuyển động SM-1, bộ phong cách xoay vòng, camera khóa kèm cổng kiểm tra khung hình, nhãn AI chỉ 3 giây, đăng nhập Google bằng tài khoản của bạn (OAuth).
 
-**Chưa làm trong bản này:** giọng đọc, link affiliate, AI video.
+**Chưa làm trong bản này:** giọng đọc, link affiliate, AI video. **Chế độ tự quay để giai đoạn 2.**
 
 **Chi phí:** ước tính khoảng 9.500–12.000đ/video. Trần mới **15.000đ/video và 900.000đ/tháng**, thay cho 10.000đ và 600.000đ.
 

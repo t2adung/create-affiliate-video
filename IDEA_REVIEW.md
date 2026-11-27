@@ -6,8 +6,8 @@
 - User language: Vietnamese
 - State: awaiting-approval
 - Raw input reference and revision: RAW_IDEA.md revision 2 (2026-11-26), SHA-256 50e828fb0d4a04dad64ab959defcbd562f93819bdc1c39480fab152214ce9b2b (previous: commit 7e559a1, SHA-256 fc75d1c3…76cd)
-- Draft IDEA.md SHA-256: f0e2fb909027ac986596ab4766b20ff7863ee7e80c73f163aa6f6a40226dc8b8 (revision 3)
-- Last completed action: user added self-filmed mode and kept the 900,000 VND/month cap; IDEA.md revision 3 drafted (revision 2 never approved)
+- Draft IDEA.md SHA-256: 37c05f9473c524e2d18e366cf95ce5b6bf9f933966476c36fefb391776a398e6 (revision 4)
+- Last completed action: user deferred self-filmed mode to phase 2 ("chế độ 'self' sẽ dc ở giai đoạn sau, ưu tiên ai trước"); IDEA.md revision 4 drafted (MVP = AI mode only, 900k cap kept)
 - Next action: wait for explicit approval of revision 2 digest; then update PLANS.md and resume at Stage 4
 
 ## Clarifications and assumptions
@@ -60,6 +60,8 @@ Round 6 (2026-11-27) — feedback after paid pilot: colours fine but monotonous 
 
 Round 7 (2026-11-27): user asked whether self-filmed footage makes transitions easier and how to film; answered with a filming guide. Decision: "thêm chế độ tự quay, giữ 900k, tôi sẽ thử chạy test trước" → revision 3 adds MVP-10 (self-filmed mode); the user will shoot a test first.
 
+Round 8 (2026-11-27): self-filmed mode moved to phase 2; MVP prioritises AI mode. Revision 4 removes MVP-10 and records it under future enhancements.
+
 ## Research and decisions
 
 Sources checked 2026-11-26 (web search summaries; verify against live docs during the Research stage):
@@ -85,7 +87,7 @@ See the Vietnamese approval summary at the end of IDEA.md (draft digest above).
 
 ## Approval record
 
-- Decision: pending (revision 3)
+- Decision: pending (revision 4)
 - Approver and evidence reference: pending
 - Approval timestamp: pending
 - Approved IDEA.md SHA-256: pending
