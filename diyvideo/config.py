@@ -1,7 +1,10 @@
 """Prices, caps and limits. Prices: official Gemini pricing page read 2026-11-26 (docs/research.md R1)."""
+import os
+
 PRICING_VERSION = "gemini-2026-11-26"
 VND_PER_USD = 26000
-CAP_GUIDE_VND = 15000
+# Approved caps (IDEA rev 4). An override is allowed only with the user's explicit approval for that run.
+CAP_GUIDE_VND = int(os.environ.get("DIY_CAP_GUIDE_VND", "15000"))
 CAP_MONTH_VND = 900000
 MAX_NEW_GUIDES_PER_RUN = 2
 # USD per 1M tokens (standard tier); batch halves every rate.
