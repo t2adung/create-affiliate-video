@@ -185,3 +185,25 @@ Findings:
   place), or animate each step image alone (single-image-to-video) instead of interpolating between steps.
   Output is 720p, so 1080×1920 delivery needs ×1.5 upscaling (1080p costs $0.104/s).
 - Pilot spend total: 40,286 VND of the approved 50,000 VND.
+
+## R10. Locked camera framing (2026-11-27, user requirement)
+
+User requirement: keep the camera framing locked across steps. A free test ran on the pilot images:
+`tools/align.py` (SIFT features + RANSAC similarity transform to the previous step image, OpenCV 5.1).
+
+- Drift between consecutive steps: noel 8/9 transitions, kitchen 8/8 and tet 7/8 are already locked
+  (scale 1.000±0.001, rotation ≤0.2°, shift ≤3 px). The chained-edit approach mostly preserves framing.
+- Two recompositions, which a camera move cannot explain: noel 05→06 (4/30 inliers; the tree was
+  re-laid out) and tet 02→03 (vase moved from centre to top, scale 1.066, shift −148 px). The AI verifier
+  passed both.
+- Warping a recomposed image to match the table grain makes it worse (the vase moves further off-centre),
+  because the objects moved relative to the table. Post-alignment is safe only for small drift
+  (scale within ±2%, rotation <1°, shift <20 px).
+
+Decision for the pipeline:
+1. The prompt locks the camera: a fixed tripod overhead, an identical crop, and objects keep their positions unless
+   the step moves them.
+2. A free framing gate after each image: measure the transform to the previous image. Small drift
+   gets warped. Large drift or <30% inliers triggers a regeneration with a stricter instruction
+   (≤2 times), then the image is flagged for review.
+3. The framing gate also feeds the Omni interpolation choice: interpolate only between frame-locked pairs.
