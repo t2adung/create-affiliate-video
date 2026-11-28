@@ -66,6 +66,10 @@ Round 9 (2026-11-28) — scope reopened. User: AI-image tutorials cost money yet
 
 Proposal sent: real phone footage (overhead/eye-level, fixed mount) + subscription AI used manually through a prompt pack (script, shot list, captions) + free automated editing (FFmpeg/OpenCV/Remotion on public-repo GitHub Actions or the user's computer) reusing the existing render/Sheets/Drive code; AI image/video generation dropped from MVP; optional licensed stock B-roll only.
 
+Round 9 answers so far (2026-11-28): user has ChatGPT Plus and Claude Pro (Q2). Also asked what "Hyperframe of Claude" is → HyperFrames is HeyGen's open-source HTML-to-video framework with a Claude connector/plugin; it is an editing/rendering tool (like Remotion), not a source of realistic footage; not recommended to replace the working Remotion renderer. Still open: Q1 (will the user film), Q3 (first topic), Q4 (repo public).
+
+Subscription research (Claude Code docs read 2026-11-28 via guide agent; see code.claude.com/docs authentication, github-actions, legal-and-compliance; support article 11145838): `claude setup-token` creates a CLAUDE_CODE_OAUTH_TOKEN usable in GitHub Actions on Pro; usage counts against the shared 5-hour/weekly Pro limits; the legal page says subscription OAuth is for ordinary individual use and products for others need API keys; the consumer terms restrict automated access except where explicitly permitted — personal scheduled use is not explicitly settled. Image input in `claude -p` is unconfirmed. Default proposal: manual prompt pack in the Claude/ChatGPT apps (clearly ordinary use, 2–3 min per video); optional, user-chosen: Claude Code Action with the user's own token for personal runs.
+
 ## Research and decisions
 
 Sources checked 2026-11-26 (web search summaries; verify against live docs during the Research stage):
