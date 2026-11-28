@@ -1,0 +1,5 @@
+Edit the PREVIOUS photo (last reference image) into the next moment of the same tutorial.
+CAMERA LOCK: reproduce the previous photo's exact framing pixel for pixel: same crop, zoom, surface edges and
+texture positions, same position and size of every object this moment does not touch. Do not re-compose,
+re-centre, zoom or rotate. Hands keep entering from the bottom edge with the same sleeves.
+The first reference image (if two are given) shows the original setup for reference only.

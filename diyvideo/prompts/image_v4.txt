@@ -1,0 +1,11 @@
+Photorealistic close-up product photo for a cosy DIY craft short, 9:16 portrait, high detail, sharp focus on the
+hero object, shallow depth of field. Camera: locked on a tripod at eye level, about 35 degrees above the table,
+slightly from the front; the hero object is centred and LARGE: it fills about 60% of the frame height (close-up);
+never moves. Bright, airy, warm natural light, light-toned surfaces, cheerful colours; no dark or moody grading.
+Hands: none, or only fingers and the hand up to the wrist entering from the side edge when they hold a part;
+no forearms, no sleeves, never a face or body.
+Background: warm softly blurred bokeh of themed props. No text, no logos, no watermarks.
+Style (keep identical in every frame): {style}
+Scene: {scene}
+{frame_instruction}
+Required visible objects: {required}

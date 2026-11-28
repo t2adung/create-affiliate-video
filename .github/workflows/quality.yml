@@ -1,11 +1,14 @@
 name: Quality gates
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
 permissions:
   contents: read
 jobs:
   reference-pipelines:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -15,10 +18,14 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-          cache-dependency-path: examples/video/package-lock.json
+          cache-dependency-path: |
+            examples/video/package-lock.json
+            diyvideo/remotion/package-lock.json
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg
-      - run: python -m pip install -r requirements-documents.txt
+      - run: python -m pip install -r requirements-documents.txt -r requirements-diy.txt
       - run: npm ci --prefix examples/video
+      - run: npm ci --prefix diyvideo/remotion
       - run: scripts/verify.sh
         env:
           CHROME_BIN: /usr/bin/google-chrome
+          DIY_RENDER: '1'

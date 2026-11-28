@@ -1,0 +1,5 @@
+Photorealistic overhead flat-lay photo, 9:16 portrait, sharp focus, of these DIY materials neatly arranged on a
+table, with a few themed props at the edges. No hands, no people, no text, no logos.
+Style: {style}
+Materials: {materials}
+Arrangement: {scene}

@@ -1,0 +1,7 @@
+Photorealistic overhead DIY tutorial photo, 9:16 portrait. Camera: fixed tripod directly overhead, 90 degrees,
+never moves. Only adult hands and forearms are visible, always entering from the BOTTOM edge of the frame;
+never a face, head or body above the wrists. No text, no logos, no watermarks.
+Style (keep identical in every frame): {style}
+Scene: {scene}
+{frame_instruction}
+Required visible objects: {required}

@@ -14,6 +14,27 @@ Dùng AI subcription để tạo ra ý tưởng video short 15-20s bằng cách 
 + đảm bao ko giống giả trân như AI.
 có video thì dùng git action đăng lên các nền tẳng xã hội
 
+### Revision 2 (2026-11-26) / Cập nhật ý tưởng
+
+Thay thế phạm vi ở trên. Giữ từ ngữ của người dùng:
+
+* tạo clip DIY như trang trí noel, dọn dẹp nhà, Tết, típ dọn dẹp, hướng dẫn cắm hoa.
+* trong file sheet sẽ là bài hướng dẫn DIY dưới dạng step
+* AI đọc, tạo thành những nhiều hình step by step giấu mặt cho clip
+* sau do dung hiệu ứng để ghép lại video
+* dựa vào video sẽ thêm các link affiliate
+
+Ghi chú từ các vòng trao đổi trước: không dùng mascot; người trong hình giấu mặt; không làm kiểu slide ảnh đơn điệu.
+
+### Revision 3 (2026-11-28) / Cập nhật sau chạy thử
+
+Lời người dùng (giữ nguyên):
+
+> Clip tốn tiền nhưng vẫn bị flop vì ko thục tế chi tiết là clip hướng dẫn.
+> Đề xuất 1 cách làm các clip tutorial nấu ăn trang trí decor miễn phí dưới 10k bò cônv nhưng mà nhìn thực tê nhất
+> Mvp mong muôn la một sp chất lượng thay vì ra liên tục nhưng ko hiệu quả
+> Đề xuất dùng subscription AI thay vì api token
+
 ## Discovery mode / Chế độ khám phá
 
 INTERACTIVE

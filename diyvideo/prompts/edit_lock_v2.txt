@@ -1,0 +1,5 @@
+Edit the PREVIOUS photo (last reference image) into the next small step of the same craft.
+CAMERA LOCK: keep the previous photo's exact framing: same crop, zoom, angle, table edge, background props and
+bokeh, same position and size of the hero object. Change only what this step adds or changes on the hero object.
+Do not re-compose, re-centre, zoom or rotate. Fingertips only, if any.
+The first reference image (if two are given) shows the first step for reference only.
