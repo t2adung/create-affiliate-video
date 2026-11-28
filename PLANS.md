@@ -191,6 +191,13 @@ logs; MVP-9 resume without re-billing, max 2 new rows per run.
 - Next: cost optimisation to restore headroom under 15,000 VND; user feedback on the video; Google OAuth
   setup with the user; scheduled workflow (2 runs/day) after the repo becomes public; publishing adapters.
 
+### 2026-11-28 — Scope reopened (RAW_IDEA revision 3)
+
+- User feedback after live AI-image tests: realism and cost are not acceptable for tutorials; wants real-looking,
+  near-zero-cost, quality-first MVP using an AI subscription. Back to Idea Discovery (round 9). Implementation
+  paused; existing code (render, Sheets/Drive adapters, ledger, framing gate) is reusable for a real-footage mode.
+- Live test spend to date (this session, API): pilot 47,735 + guide tests 15,939 + 13,327 + 14,833 + 13,803 VND.
+
 ## Template baseline (legacy)
 
 The repository template's own reference plan (four synthetic examples, PyMuPDF, SQLite jobs, mock providers,

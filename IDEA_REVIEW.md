@@ -4,11 +4,11 @@
 
 - Mode: INTERACTIVE
 - User language: Vietnamese
-- State: handed-off
-- Raw input reference and revision: RAW_IDEA.md revision 2 (2026-11-26), SHA-256 50e828fb0d4a04dad64ab959defcbd562f93819bdc1c39480fab152214ce9b2b (previous: commit 7e559a1, SHA-256 fc75d1c3…76cd)
+- State: clarifying
+- Raw input reference and revision: RAW_IDEA.md revision 3 (2026-11-28), SHA-256 9f58d99f580e5b20d4e1e49356d5c199a1c0465d6cb161ebb3240146224c847c
 - Draft IDEA.md SHA-256: 37c05f9473c524e2d18e366cf95ce5b6bf9f933966476c36fefb391776a398e6 (revision 4)
-- Last completed action: user approved IDEA.md revision 4 (digest verified); PLANS.md updated; handed off
-- Next action: follow PLANS.md (Stage 4 pipeline design, then mock-first implementation)
+- Last completed action: user reopened scope after live AI-image tests (cost vs. realism); RAW_IDEA revision 3 recorded; round 9 proposal sent
+- Next action: get round-9 answers (who films, subscription owned, where editing runs, first topic), then draft IDEA.md revision 5
 
 ## Clarifications and assumptions
 
@@ -61,6 +61,10 @@ Round 6 (2026-11-27) — feedback after paid pilot: colours fine but monotonous 
 Round 7 (2026-11-27): user asked whether self-filmed footage makes transitions easier and how to film; answered with a filming guide. Decision: "thêm chế độ tự quay, giữ 900k, tôi sẽ thử chạy test trước" → revision 3 adds MVP-10 (self-filmed mode); the user will shoot a test first.
 
 Round 8 (2026-11-27): self-filmed mode moved to phase 2; MVP prioritises AI mode. Revision 4 removes MVP-10 and records it under future enhancements.
+
+Round 9 (2026-11-28) — scope reopened. User: AI-image tutorials cost money yet would flop because the details are not realistic; wants cooking/decor/DIY tutorials that look as real as possible at zero or very low cost, quality over volume (one strong video instead of many weak ones), and an AI subscription instead of API tokens. Approved revision 4 stays the last approved spec until a new revision is approved; implementation paused.
+
+Proposal sent: real phone footage (overhead/eye-level, fixed mount) + subscription AI used manually through a prompt pack (script, shot list, captions) + free automated editing (FFmpeg/OpenCV/Remotion on public-repo GitHub Actions or the user's computer) reusing the existing render/Sheets/Drive code; AI image/video generation dropped from MVP; optional licensed stock B-roll only.
 
 ## Research and decisions
 

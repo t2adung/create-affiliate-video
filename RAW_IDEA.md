@@ -26,6 +26,15 @@ Thay thế phạm vi ở trên. Giữ từ ngữ của người dùng:
 
 Ghi chú từ các vòng trao đổi trước: không dùng mascot; người trong hình giấu mặt; không làm kiểu slide ảnh đơn điệu.
 
+### Revision 3 (2026-11-28) / Cập nhật sau chạy thử
+
+Lời người dùng (giữ nguyên):
+
+> Clip tốn tiền nhưng vẫn bị flop vì ko thục tế chi tiết là clip hướng dẫn.
+> Đề xuất 1 cách làm các clip tutorial nấu ăn trang trí decor miễn phí dưới 10k bò cônv nhưng mà nhìn thực tê nhất
+> Mvp mong muôn la một sp chất lượng thay vì ra liên tục nhưng ko hiệu quả
+> Đề xuất dùng subscription AI thay vì api token
+
 ## Discovery mode / Chế độ khám phá
 
 INTERACTIVE
